@@ -18,19 +18,27 @@
     Copyright (C) 2019, Fredrik Persson <fpersson.se@gmail.com>
  */
 
-#include <iostream>
-#include <functional>
-#include "TimerTask.h"
-#include "SensorCore.h"
+#ifndef TEMPSENSOR_SENSORCORE_H
+#define TEMPSENSOR_SENSORCORE_H
 
-int main()
-{
-    std::cout << "Starting..." << std::endl;
-    TempSensor::TimerTask tt;
-    TempSensor::SensorCore core("28-0417a2f482ff");
+#include <string>
 
-    std::thread t1 = tt.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
-    t1.join();
+namespace TempSensor {
 
-    return 0;
-}
+    //const std::string SYSFS_PATH = "/sys/bus/w1/devices/";
+    const std::string SYSFS_PATH = "./testdata/";
+    const std::string SLAVE = "/w1_slave";
+
+    class SensorCore {
+    public:
+        explicit SensorCore(std::string sensorID);
+        void readSensor();
+
+    private:
+        std::string mSensorID;
+        std::string file;
+    };
+} //namespace
+
+
+#endif //TEMPSENSOR_SENSORCORE_H

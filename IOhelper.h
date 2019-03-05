@@ -18,19 +18,24 @@
     Copyright (C) 2019, Fredrik Persson <fpersson.se@gmail.com>
  */
 
-#include <iostream>
-#include <functional>
-#include "TimerTask.h"
-#include "SensorCore.h"
+#ifndef TEMPSENSOR_IOHELPER_H
+#define TEMPSENSOR_IOHELPER_H
 
-int main()
-{
-    std::cout << "Starting..." << std::endl;
-    TempSensor::TimerTask tt;
-    TempSensor::SensorCore core("28-0417a2f482ff");
 
-    std::thread t1 = tt.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
-    t1.join();
+#include <string>
+#include <vector>
 
-    return 0;
-}
+namespace IO {
+
+    using StringList = std::vector<std::string>;
+
+    std::string readFromFile(const std::string &file);
+
+    void writeToFile(const std::string &file, const std::string &data);
+
+    StringList split(const std::string &string, char delimiter);
+
+}//namespace
+
+
+#endif //TEMPSENSOR_IOHELPER_H

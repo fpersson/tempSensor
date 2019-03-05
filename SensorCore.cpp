@@ -19,40 +19,22 @@
  */
 
 #include <iostream>
-#include <thread>
-#include <functional>
-#include "TimerTask.h"
+#include "IOhelper.h"
+#include "SensorCore.h"
 
-namespace TempSensor{
+namespace TempSensor {
+    SensorCore::SensorCore(std::string sensorID) : mSensorID(std::move(sensorID)), file("") {
+        file.append(SYSFS_PATH).append(mSensorID).append(SLAVE);
+        std::cout << "INIT: " << file << std::endl;
 
-    TimerTask::TimerTask(long minutes) :mDelay(minutes) {
-        std::cout << "Delay: " << mDelay << std::endl;
     }
 
-    void TimerTask::run(std::function<void()>callback) {
-        mRunning = true;
-        while(mRunning){
-            callback();
-            this->sleep();
-        }
+    void SensorCore::readSensor() {
+        std::cout << "Reading " << file << std::endl;
+        std::string data = IO::readFromFile(file);
+        IO::StringList sl = IO::split(data, '\n');
+        IO::StringList sl1 = IO::split(sl[1], ' ');
+        std::cout << "FOUND: " <<  std::stof(IO::split(sl1[9], '=')[1])/1000 << std::endl;
     }
 
-    std::thread TimerTask::thread_run(std::function<void()> callback) {
-        mRunning = true;
-        return std::thread( [=] {
-            while(mRunning){
-                callback();
-                this->sleep();
-            }
-        });
-    }
-
-    void TimerTask::sleep() {
-        std::this_thread::sleep_for(std::chrono::minutes(mDelay));
-    }
-
-    void TimerTask::interrupt() {
-        mRunning = false;
-    }
-
-}
+} //namespace
