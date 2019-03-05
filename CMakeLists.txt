@@ -10,7 +10,8 @@ set(SOURCE_FILES
         SensorCore.h
         IOhelper.cpp
         IOhelper.h
-)
+        FObserver.h
+        )
 
 add_executable(tempsensor main.cpp ${SOURCE_FILES})
 target_link_libraries(tempsensor)

@@ -34,7 +34,9 @@ namespace TempSensor {
         std::string data = IO::readFromFile(file);
         IO::StringList sl = IO::split(data, '\n');
         IO::StringList sl1 = IO::split(sl[1], ' ');
-        std::cout << "FOUND: " <<  std::stof(IO::split(sl1[9], '=')[1])/1000 << std::endl;
+        std::string tmp = std::to_string(std::stof(IO::split(sl1[9], '=')[1])/1000);
+        std::cout << "FOUND: " <<  tmp << std::endl;
+        onEvent(tmp);
     }
 
 } //namespace

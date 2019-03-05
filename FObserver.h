@@ -18,28 +18,36 @@
     Copyright (C) 2019, Fredrik Persson <fpersson.se@gmail.com>
  */
 
-#ifndef TEMPSENSOR_SENSORCORE_H
-#define TEMPSENSOR_SENSORCORE_H
+#ifndef TEMPSENSOR_FOBSERVER_H
+#define TEMPSENSOR_FOBSERVER_H
 
-#include <string>
-#include "FObserver.h"
+#include <iostream>
+#include <vector>
+#include <functional>
 
-namespace TempSensor {
 
-    //const std::string SYSFS_PATH = "/sys/bus/w1/devices/";
-    const std::string SYSFS_PATH = "./testdata/";
-    const std::string SLAVE = "/w1_slave";
+namespace FObserver{
 
-    class SensorCore : public  FObserver::Observable{
+    class Observer{
     public:
-        explicit SensorCore(std::string sensorID);
-        void readSensor();
+        virtual void notify(const std::string& data)=0;
+    };
+
+    class Observable{
+    public:
+        void register_observer(Observer& o){
+            observers.emplace_back(o);
+        }
+
+        void onEvent(const std::string& data ){
+            for(Observer& o : observers){
+                o.notify(data);
+            }
+        }
 
     private:
-        std::string mSensorID;
-        std::string file;
+        std::vector<std::reference_wrapper<Observer>> observers;
     };
 } //namespace
 
-
-#endif //TEMPSENSOR_SENSORCORE_H
+#endif //TEMPSENSOR_FOBSERVER_H

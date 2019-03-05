@@ -22,12 +22,22 @@
 #include <functional>
 #include "TimerTask.h"
 #include "SensorCore.h"
+#include "FObserver.h"
+
+class Foo : public FObserver::Observer{
+public:
+    void notify(const std::string& data) override {
+        std::cout << "Foo::notify: " << data << std::endl;
+    }
+};
 
 int main()
 {
     std::cout << "Starting..." << std::endl;
     TempSensor::TimerTask tt;
     TempSensor::SensorCore core("28-0417a2f482ff");
+    Foo f;
+    core.register_observer(f);
 
     std::thread t1 = tt.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
     t1.join();
