@@ -18,13 +18,33 @@
     Copyright (C) 2019, Fredrik Persson <fpersson.se@gmail.com>
  */
 
-#include <QCoreApplication>
-#include <QDebug>
+#include <iostream>
+#include <functional>
+#include "TimerTask.h"
 
-int main(int argc, char *argv[])
+class test{
+public:
+    explicit test(std::string path):mPath(std::move(path)){;}
+
+    void aFunction(){
+        std::cout << "works: " << mPath << std::endl;
+    }
+
+private:
+    std::string mPath;
+};
+
+
+
+int main()
 {
-    QCoreApplication a(argc, argv);
-    qDebug() << "Hello, world.";
+    std::cout << "Starting..." << std::endl;
+    TempeSensor::TimerTask tt;
+    test t("/home");
+    tt.run(std::bind(&test::aFunction, &t));
 
-    return a.exec();
+    std::thread t1 = tt.thread_run(std::bind(&test::aFunction, &t));
+    t1.join();
+
+    return 0;
 }
