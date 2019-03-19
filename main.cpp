@@ -27,22 +27,15 @@
 
 std::string TOKEN="AIzaSyDBE1KqXaAvicpGklTBRP0ZvYoBJXG5PoI";
 std::string URL="https://testing-c408e.firebaseio.com/sensors/testing/current.json";
-
-class Foo : public FObserver::Observer{
-public:
-    void notify(const std::string& data) override {
-        std::cout << "Foo::notify: " << data << std::endl;
-    }
-};
+std::string SENSOR="28-0417a2f482ff";
 
 int main()
 {
     std::cout << "Starting..." << std::endl;
     TempSensor::TimerTask tt;
-    TempSensor::SensorCore core("28-0417a2f482ff");
-    Foo f;
+    TempSensor::SensorCore core(SENSOR);
     CurlFirebase cf(URL, TOKEN);
-    core.register_observer(f);
+
     core.register_observer(cf);
 
     std::thread t1 = tt.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
