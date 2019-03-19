@@ -24,17 +24,48 @@
 #include "SensorCore.h"
 #include "FObserver.h"
 #include "CurlFirebase.h"
+#include "IniParser.h"
 
-std::string TOKEN="AIzaSyDBE1KqXaAvicpGklTBRP0ZvYoBJXG5PoI";
-std::string URL="https://testing-c408e.firebaseio.com/sensors/testing/current.json";
-std::string SENSOR="28-0417a2f482ff";
+int main(int argc, char **argv){
 
-int main()
-{
     std::cout << "Starting..." << std::endl;
+    std::string ini_file;
+
+    if(argc != 2){
+        std::cout << "Usage: tempsensor <settings.ini>" << std::endl;
+        return -1;
+    }else{
+        ini_file = argv[1];
+    }
+
+    std::string sensor;
+    std::string url;
+    std::string token;
+
+    utils::IniParser iniParser;
+    iniParser.parseFile(ini_file);
     TempSensor::TimerTask tt;
-    TempSensor::SensorCore core(SENSOR);
-    CurlFirebase cf(URL, TOKEN);
+
+    if(iniParser.getValue("sensor").first){
+        sensor = iniParser.getValue("sensor").second;
+    }else{
+        std::cout << "no sensor defined in " << ini_file << std::endl;
+    }
+
+    if(iniParser.getValue("url").first){
+        url = iniParser.getValue("url").second;
+    }else{
+        std::cout << "no url defined in " << ini_file << std::endl;
+    }
+
+    if(iniParser.getValue("token").first){
+        token = iniParser.getValue("token").second;
+    }else{
+        std::cout << "no token defined in " << ini_file << std::endl;
+    }
+
+    TempSensor::SensorCore core(sensor);
+    CurlFirebase cf(url, token);
 
     core.register_observer(cf);
 

@@ -35,6 +35,12 @@ namespace IO {
 
     StringList split(const std::string &string, char delimiter);
 
+    /**
+     * @param str
+     * @return a string free from whitespace, does not remove newline or other tings
+     */
+    std::string trim(const std::string &str);
+
 }//namespace
 
 
