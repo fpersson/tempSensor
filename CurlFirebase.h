@@ -18,35 +18,22 @@
     Copyright (C) 2019, Fredrik Persson <fpersson.se@gmail.com>
  */
 
-#include <iostream>
-#include <functional>
-#include "TimerTask.h"
-#include "SensorCore.h"
+#ifndef TEMPSENSOR_CURLFIREBASE_H
+#define TEMPSENSOR_CURLFIREBASE_H
+
 #include "FObserver.h"
-#include "CurlFirebase.h"
 
-std::string TOKEN="AIzaSyDBE1KqXaAvicpGklTBRP0ZvYoBJXG5PoI";
-std::string URL="https://testing-c408e.firebaseio.com/sensors/testing/current.json";
+size_t writeCallback(char* buf, size_t size, size_t nmemb, void* up);
 
-class Foo : public FObserver::Observer{
+class CurlFirebase : public FObserver::Observer {
 public:
-    void notify(const std::string& data) override {
-        std::cout << "Foo::notify: " << data << std::endl;
-    }
+    explicit CurlFirebase(std::string Url, std::string token);
+    void notify(const std::string& data) override;
+
+private:
+    std::string url;
+    std::string access_token;
 };
 
-int main()
-{
-    std::cout << "Starting..." << std::endl;
-    TempSensor::TimerTask tt;
-    TempSensor::SensorCore core("28-0417a2f482ff");
-    Foo f;
-    CurlFirebase cf(URL, TOKEN);
-    core.register_observer(f);
-    core.register_observer(cf);
 
-    std::thread t1 = tt.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
-    t1.join();
-
-    return 0;
-}
+#endif //TEMPSENSOR_CURLFIREBASE_H
