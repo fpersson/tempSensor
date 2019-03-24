@@ -42,7 +42,7 @@ namespace IO{
                 data.append("\n");
             }
         }else{
-            std::cout << "could not open: " << file << std::endl;
+            std::cerr << "could not open: " << file << '\n';
         }
         return data;
     }

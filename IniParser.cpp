@@ -57,7 +57,7 @@ namespace utils {
                 parseString(line);
             }
         }else{
-            std::cout << " could not open: " << file << std::endl;
+            std::cerr << " could not open: " << file << '\n';
         }
 
     }

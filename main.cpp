@@ -28,11 +28,11 @@
 
 int main(int argc, char **argv){
 
-    std::cout << "Starting..." << std::endl;
+    std::cerr << "Starting..." << '\n';
     std::string ini_file;
 
     if(argc != 2){
-        std::cout << "Usage: tempsensor <settings.ini>" << std::endl;
+        std::cerr << "Usage: tempsensor <settings.ini>\n";
         return -1;
     }else{
         ini_file = argv[1];
@@ -49,19 +49,19 @@ int main(int argc, char **argv){
     if(iniParser.getValue("sensor").first){
         sensor = iniParser.getValue("sensor").second;
     }else{
-        std::cout << "no sensor defined in " << ini_file << std::endl;
+        std::cerr << "no sensor defined in " << ini_file << '\n';
     }
 
     if(iniParser.getValue("url").first){
         url = iniParser.getValue("url").second;
     }else{
-        std::cout << "no url defined in " << ini_file << std::endl;
+        std::cerr << "no url defined in " << ini_file << '\n';
     }
 
     if(iniParser.getValue("token").first){
         token = iniParser.getValue("token").second;
     }else{
-        std::cout << "no token defined in " << ini_file << std::endl;
+        std::cerr << "no token defined in " << ini_file << '\n';
     }
 
     TempSensor::SensorCore core(sensor);
