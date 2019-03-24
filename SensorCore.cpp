@@ -19,6 +19,8 @@
  */
 
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 #include "IOhelper.h"
 #include "SensorCore.h"
 
@@ -34,9 +36,13 @@ namespace TempSensor {
         std::string data = IO::readFromFile(file);
         IO::StringList sl = IO::split(data, '\n');
         IO::StringList sl1 = IO::split(sl[1], ' ');
-        std::string tmp = std::to_string(std::stof(IO::split(sl1[9], '=')[1])/1000);
-        std::cout << "FOUND: " <<  tmp << std::endl;
-        onEvent(tmp);
+
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(2);
+        ss << std::stof(IO::split(sl1[9], '=')[1])/1000;
+
+        std::cout << "FOUND: " <<  ss.str() << std::endl;
+        onEvent(ss.str());
     }
 
 } //namespace
