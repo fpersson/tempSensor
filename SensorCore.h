@@ -26,8 +26,12 @@
 
 namespace TempSensor {
 
-    //const std::string SYSFS_PATH = "/sys/bus/w1/devices/";
+#ifdef DEVEL
     const std::string SYSFS_PATH = "./testdata/";
+#else
+    const std::string SYSFS_PATH = "/sys/bus/w1/devices/";
+#endif
+
     const std::string SLAVE = "/w1_slave";
 
     class SensorCore : public  FObserver::Observable{
