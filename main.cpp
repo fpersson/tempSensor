@@ -20,11 +20,14 @@
 
 #include <iostream>
 #include <functional>
+
 #include "TimerTask.h"
 #include "SensorCore.h"
 #include "FObserver.h"
 #include "CurlFirebase.h"
 #include "IniParser.h"
+
+#include "DBManager.h"
 
 int main(int argc, char **argv){
 
@@ -41,6 +44,7 @@ int main(int argc, char **argv){
     std::string sensor;
     std::string url;
     std::string token;
+    std::string db_file;
     long interval=1;
 
     utils::IniParser iniParser;
@@ -70,12 +74,22 @@ int main(int argc, char **argv){
         std::cerr << "no interval defined in " << ini_file << " using default 1 minute\n";
     }
 
+    if(iniParser.getValue("db_file").first){
+        db_file = iniParser.getValue("db_file").second;
+    }else{
+        std::cerr << "no db_file defined in " << ini_file << '\n';
+    }
+
     TempSensor::TimerTask tt(interval);
 
     TempSensor::SensorCore core(sensor);
     CurlFirebase cf(url, token);
 
+    DBManager dbManager;
+    dbManager.init(db_file);
+
     core.register_observer(cf);
+    core.register_observer(dbManager);
 
     std::thread t1 = tt.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
     t1.join();

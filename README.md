@@ -26,6 +26,7 @@ $ tempsensor <settings.ini>
 ## Dependecy
 
 * libcurl4-gnutls-dev
+* libsqlite3-dev
 
 ## settings.ini
 ```
@@ -38,4 +39,6 @@ interval=1
 [FireBase]
 url=https://testing-c408e.firebaseio.com/sensors/testing/current.json
 token=AIzaSyDBE1KqXaAvicpGklTBRP0ZvYoBJXG5PoI
+[SQLite]
+db_file=temperature.db
 ```

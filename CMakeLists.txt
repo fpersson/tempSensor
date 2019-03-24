@@ -11,10 +11,15 @@ option(unittest "Build unittest." OFF)
 #add_definitions(-DDEBUGMODE)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++14")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(CURL REQUIRED)
-set(CURL_LIBRARY "-lcurl")
+#set(CURL_LIBRARY "-lcurl")
 include_directories(${CURL_INCLUDE_DIR})
+
+find_package (SQLite3 REQUIRED)
+set(SQLITE3_LIBRARY "-lsqlite3")
+include_directories(${SQLITE3_INCLUDE_DIRS})
 
 set(SOURCE_FILES
         TimerTask.cpp
@@ -24,7 +29,7 @@ set(SOURCE_FILES
         FObserver.h
         CurlFirebase.cpp
         CurlFirebase.h
-        )
+        DBManager.cpp DBManager.h)
 
 set(lib_utils_SRC
         IOhelper.cpp
@@ -36,7 +41,7 @@ set(lib_utils_SRC
 add_library(lib_utils ${lib_utils_SRC})
 
 add_executable(tempsensor main.cpp ${SOURCE_FILES})
-target_link_libraries(tempsensor lib_utils ${CURL_LIBRARIES})
+target_link_libraries(tempsensor lib_utils ${CURL_LIBRARIES} ${SQLITE3_LIBRARY})
 
 if(unittest)
     add_subdirectory(googletest)
