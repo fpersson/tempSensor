@@ -41,10 +41,10 @@ int main(int argc, char **argv){
     std::string sensor;
     std::string url;
     std::string token;
+    long interval=1;
 
     utils::IniParser iniParser;
     iniParser.parseFile(ini_file);
-    TempSensor::TimerTask tt;
 
     if(iniParser.getValue("sensor").first){
         sensor = iniParser.getValue("sensor").second;
@@ -63,6 +63,14 @@ int main(int argc, char **argv){
     }else{
         std::cerr << "no token defined in " << ini_file << '\n';
     }
+
+    if(iniParser.getValue("interval").first){
+        interval = std::stol(iniParser.getValue("interval").second);
+    }else{
+        std::cerr << "no interval defined in " << ini_file << " using default 1 minute\n";
+    }
+
+    TempSensor::TimerTask tt(interval);
 
     TempSensor::SensorCore core(sensor);
     CurlFirebase cf(url, token);
