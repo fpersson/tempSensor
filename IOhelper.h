@@ -27,9 +27,10 @@
 
 namespace IO {
 
+    using ReadResult = std::pair<bool, std::string>;
     using StringList = std::vector<std::string>;
 
-    std::string readFromFile(const std::string &file);
+    ReadResult readFromFile(const std::string &file);
 
     void writeToFile(const std::string &file, const std::string &data);
 

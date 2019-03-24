@@ -23,6 +23,7 @@
 #include "IOhelper.h"
 
 namespace IO{
+
     void writeToFile(const std::string &file, const std::string &data){
         std::ofstream stream;
         stream.open(file);
@@ -31,8 +32,12 @@ namespace IO{
         stream.close();
     }
 
-    //@todo improve retvalue
-    std::string readFromFile(const std::string &file){
+    /**
+     *
+     * @param file
+     * @return true and a string if we have valid data, and false and a empty string if we dont have anything
+     */
+    ReadResult readFromFile(const std::string &file){
         std::string data;
         std::string line;
         std::ifstream stream(file);
@@ -43,8 +48,9 @@ namespace IO{
             }
         }else{
             std::cerr << "could not open: " << file << '\n';
+            return std::make_pair(false, "");
         }
-        return data;
+        return std::make_pair(true, data);
     }
 
     StringList split(const std::string &string, char delimiter){

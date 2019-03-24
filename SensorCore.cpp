@@ -37,17 +37,21 @@ namespace TempSensor {
 #ifdef DEBUGMODE
         std::cout << "Reading " << file << std::endl;
 #endif
-        std::string data = IO::readFromFile(file);
-        IO::StringList sl = IO::split(data, '\n');
-        IO::StringList sl1 = IO::split(sl[1], ' ');
+        auto fileRead = IO::readFromFile(file);
+        if(fileRead.first) {
+            IO::StringList sl = IO::split(fileRead.second, '\n');
+            IO::StringList sl1 = IO::split(sl[1], ' ');
 
-        std::stringstream ss;
-        ss << std::fixed << std::setprecision(2);
-        ss << std::stof(IO::split(sl1[9], '=')[1])/1000;
+            std::stringstream ss;
+            ss << std::fixed << std::setprecision(2);
+            ss << std::stof(IO::split(sl1[9], '=')[1]) / 1000;
 #ifdef DEBUGMODE
-        std::cout << "FOUND: " <<  ss.str() << std::endl;
+            std::cout << "FOUND: " <<  ss.str() << std::endl;
 #endif
-        onEvent(ss.str());
+            onEvent(ss.str());
+        }else{
+            std::cerr << "Could not read sensor: " << file << '\n';
+        }
     }
 
 } //namespace
