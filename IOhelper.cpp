@@ -19,6 +19,8 @@
  */
 #include <iostream>
 #include <fstream>
+#include <chrono>
+#include <iomanip>
 
 #include "IOhelper.h"
 
@@ -33,7 +35,6 @@ namespace IO{
     }
 
     /**
-     *
      * @param file
      * @return true and a string if we have valid data, and false and a empty string if we dont have anything
      */
@@ -51,6 +52,16 @@ namespace IO{
             return std::make_pair(false, "");
         }
         return std::make_pair(true, data);
+    }
+
+    std::string getCurrentTime(const std::string& format){
+        auto now = std::chrono::system_clock::now();
+        auto current = std::chrono::system_clock::to_time_t(now);
+
+        std::stringstream ss;
+
+        ss << std::put_time(std::localtime(&current), format.c_str());
+        return ss.str();
     }
 
     StringList split(const std::string &string, char delimiter){

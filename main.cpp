@@ -28,6 +28,7 @@
 #include "IniParser.h"
 
 #include "DBManager.h"
+#include "Mqtt.h"
 
 int main(int argc, char **argv){
 
@@ -88,8 +89,20 @@ int main(int argc, char **argv){
     DBManager dbManager;
     dbManager.init(db_file);
 
-    core.register_observer(cf);
+    TempSensor::MqttSettings mqttSettings;
+
+    mqttSettings.ID=iniParser.getValue("ID").second;
+    mqttSettings.server=iniParser.getValue("server").second;
+    mqttSettings.port=std::stoi(iniParser.getValue("port").second);//15786;
+    mqttSettings.username=iniParser.getValue("username").second;
+    mqttSettings.password=iniParser.getValue("password").second;
+    mqttSettings.topic=iniParser.getValue("topic").second;
+
+    TempSensor::Mqtt m(mqttSettings);
+
+    //core.register_observer(cf);
     core.register_observer(dbManager);
+    core.register_observer(m);
 
     std::thread t1 = tt.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
     t1.join();

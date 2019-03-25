@@ -5,10 +5,10 @@ project(tempsensor)
 option(unittest "Build unittest." OFF)
 
 #uncomment to as devel
-#add_definitions(-DDEVEL)
+add_definitions(-DDEVEL)
 
 #uncomment to in debug
-#add_definitions(-DDEBUGMODE)
+add_definitions(-DDEBUGMODE)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++14")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -21,6 +21,10 @@ find_package (SQLite3 REQUIRED)
 set(SQLITE3_LIBRARY "-lsqlite3")
 include_directories(${SQLITE3_INCLUDE_DIRS})
 
+find_package(Mosquittopp)
+include_directories(${MOSQUITTO_INCLUDE_DIRS})
+
+
 set(SOURCE_FILES
         TimerTask.cpp
         TimerTask.h
@@ -29,7 +33,10 @@ set(SOURCE_FILES
         FObserver.h
         CurlFirebase.cpp
         CurlFirebase.h
-        DBManager.cpp DBManager.h)
+        DBManager.cpp
+        DBManager.h
+        Mqtt.cpp
+        Mqtt.h)
 
 set(lib_utils_SRC
         IOhelper.cpp
@@ -41,7 +48,7 @@ set(lib_utils_SRC
 add_library(lib_utils ${lib_utils_SRC})
 
 add_executable(tempsensor main.cpp ${SOURCE_FILES})
-target_link_libraries(tempsensor lib_utils ${CURL_LIBRARIES} ${SQLITE3_LIBRARY})
+target_link_libraries(tempsensor lib_utils ${CURL_LIBRARIES} ${SQLITE3_LIBRARY} ${MOSQUITTOPP_LIBRARIES})
 
 if(unittest)
     add_subdirectory(googletest)

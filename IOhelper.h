@@ -37,6 +37,13 @@ namespace IO {
     StringList split(const std::string &string, char delimiter);
 
     /**
+     * Accept any format strings
+     * @param format
+     * @return
+     */
+    std::string getCurrentTime(const std::string& format);
+
+    /**
      * @param str
      * @return a string free from whitespace, does not remove newline or other tings
      */

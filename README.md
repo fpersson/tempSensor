@@ -41,4 +41,10 @@ url=https://testing-c408e.firebaseio.com/sensors/testing/current.json
 token=AIzaSyDBE1KqXaAvicpGklTBRP0ZvYoBJXG5PoI
 [SQLite]
 db_file=temperature.db
+[mqtt]
+server=m24.cloudmqtt.com
+port=15786
+username=foo
+password=bar
+topic=lek
 ```
