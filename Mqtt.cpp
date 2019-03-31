@@ -45,7 +45,7 @@ namespace TempSensor{
 
             std::string sendData = "{\"date\": \"";
             sendData.append(IO::getCurrentTime("%a %d %B - %R"));
-            sendData.append("\", \" temp\" : \"");
+            sendData.append("\", \"temp\" : \"");
             sendData.append(data).append("\"}");
 
             publish(mTopic.c_str(), sendData);

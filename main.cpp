@@ -84,7 +84,7 @@ int main(int argc, char **argv){
     TempSensor::TimerTask tt(interval);
 
     TempSensor::SensorCore core(sensor);
-    CurlFirebase cf(url, token);
+    //CurlFirebase cf(url, token);
 
     DBManager dbManager;
     dbManager.init(db_file);

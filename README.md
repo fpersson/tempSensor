@@ -27,6 +27,8 @@ $ tempsensor <settings.ini>
 
 * libcurl4-gnutls-dev
 * libsqlite3-dev
+* libmosquitto-dev
+* libmosquittopp-dev
 
 ## settings.ini
 ```
