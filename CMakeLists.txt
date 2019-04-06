@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.7)
 project(tempsensor)
 
 #Option activate with -Dunittest=ON
-option(unittest "Build unittest." OFF)
+option(unittest "Build unittest." ON)
 
 #uncomment to as devel
 #add_definitions(-DDEVEL)
@@ -43,6 +43,7 @@ set(lib_utils_SRC
         IOhelper.h
         IniParser.cpp
         IniParser.h
+        optional.h
         )
 
 add_library(lib_utils ${lib_utils_SRC})

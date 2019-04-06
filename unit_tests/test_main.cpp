@@ -23,6 +23,7 @@
 #include "gtest/gtest.h"
 #include "../IOhelper.h"
 #include "../IniParser.h"
+#include "../optional.h"
 
 TEST(inifile, stringsplit){
     utils::IniParser iniParser;
@@ -74,4 +75,18 @@ TEST(functions, trim){
     EXPECT_EQ("begin", IO::trim(untrimmed_begin));
     EXPECT_EQ("this is the end", IO::trim(untrimmed));
     EXPECT_EQ(last, IO::trim(last));
+}
+
+utils::option<std::string> getValue1(){
+    return {"Hello, world"};
+}
+
+
+utils::option<std::string> getValue2(){
+    return utils::option<std::string>::none();
+}
+
+TEST(myOptional, optional){
+    EXPECT_EQ("Hello, world", *getValue1());
+    EXPECT_FALSE(getValue2());
 }
