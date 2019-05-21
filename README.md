@@ -12,7 +12,7 @@ $ tempsensor <settings.ini>
 * cmake ..
 * cd ..
 * make -C build
-* sudo ./build/tn_mesh
+* sudo ./build/tempsensor
 
 ## Build gtests.
 
@@ -37,9 +37,6 @@ $ tempsensor <settings.ini>
 sensor=28-0417a2f482ff
 #interval given in minutes
 interval=1
-[FireBase]
-url=https://testing-c408e.firebaseio.com/sensors/testing/current.json
-token=AIzaSyDBE1KqXaAvicpGklTBRP0ZvYoBJXG5PoI
 [SQLite]
 db_file=temperature.db
 [mqtt]
