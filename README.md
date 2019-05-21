@@ -25,7 +25,6 @@ $ tempsensor <settings.ini>
 
 ## Dependecy
 
-* libcurl4-gnutls-dev
 * libsqlite3-dev
 * libmosquitto-dev
 * libmosquittopp-dev

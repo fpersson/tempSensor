@@ -24,7 +24,6 @@
 #include "TimerTask.h"
 #include "SensorCore.h"
 #include "FObserver.h"
-#include "CurlFirebase.h"
 #include "IniParser.h"
 
 #include "DBManager.h"
@@ -84,7 +83,6 @@ int main(int argc, char **argv){
     TempSensor::TimerTask tt(interval);
 
     TempSensor::SensorCore core(sensor);
-    //CurlFirebase cf(url, token);
 
     DBManager dbManager;
     dbManager.init(db_file);
@@ -100,7 +98,6 @@ int main(int argc, char **argv){
 
     TempSensor::Mqtt m(mqttSettings);
 
-    //core.register_observer(cf);
     core.register_observer(dbManager);
     core.register_observer(m);
 
