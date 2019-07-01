@@ -1,11 +1,19 @@
-# tempSensor
+# TempSensor
 
-## Usage.
+## Hardware
+
+* Rpi Zero W
+* Temperature sensor DS18B20
+
+## Building
+
+### Usage.
+
 ```bash
 $ tempsensor <settings.ini>
 ```
 
-## Build.
+### Build.
 
 * mkdir build
 * cd build
@@ -14,7 +22,7 @@ $ tempsensor <settings.ini>
 * make -C build
 * sudo ./build/tempsensor
 
-## Build gtests.
+### Build gtests.
 
 * mkdir build
 * cd build
@@ -23,13 +31,14 @@ $ tempsensor <settings.ini>
 * make -C build
 * ./build/runUnitTests
 
-## Dependecy
+### Dependecy.
 
 * libsqlite3-dev
 * libmosquitto-dev
 * libmosquittopp-dev
 
-## settings.ini
+### settings.ini
+
 ```
 # This files contains all settings temperaturesensor,
 # edit to fit your needs.
@@ -46,3 +55,9 @@ username=foo
 password=bar
 topic=lek
 ```
+
+## Frontend
+
+A simple webpage with a basic js mqtt client. Displaying current temperature and the temperature for the last 24h. Edit to fit your needs.
+
+![alt text](./screenshots/screenshot.png)
