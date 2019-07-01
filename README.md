@@ -1,9 +1,9 @@
 # TempSensor
 
-## Hardware
+## Hardware Requirement
 
-* Rpi Zero W
-* Temperature sensor DS18B20
+* Rpi [Zero W](https://www.electrokit.com/produkt/raspberry-pi-zero-w-board/)
+* Temperature sensor [DS18B20](https://www.kjell.com/se/produkter/el-verktyg/utvecklingskit/arduino/tillbehor/temperatursensor-med-kabel-for-arduino-p87081)
 
 ## Building
 
@@ -61,3 +61,26 @@ topic=lek
 A simple webpage with a basic js mqtt client. Displaying current temperature and the temperature for the last 24h. Edit to fit your needs.
 
 ![alt text](./screenshots/screenshot.png)
+
+## Hardware
+
+### Setup DS18B20
+Your DS18B20 should be connected to pin 7 (BCM4), gnd, and 3v.
+
+Edit /boot/config.txt
+```bash
+# Enable gpio for DS18BS20
+dtoverlay=w1-gpio,pinout=4,pullup=on
+```
+
+Edit /etc/modules
+```bash
+# /etc/modules: kernel modules to load at boot time.
+#
+# This file contains the names of kernel modules that should be loaded
+# at boot time, one per line. Lines beginning with "#" are ignored.
+w1-gpio pullup=1
+w1-therm strong_pullup=1
+```
+
+check for /sys/bus/w1/devices/28-xxxxxxxxxx 
