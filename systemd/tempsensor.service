@@ -1,0 +1,7 @@
+[Unit]
+Description=firebase service to post outdoortemperature
+[Service]
+ExecStart=/home/pi/bin/start_sensor.sh
+Restart=on-faliure
+RestartSec=2s
+[Install]
