@@ -17,7 +17,8 @@
 #ifndef TEMPSENSOR_MQTT_H
 #define TEMPSENSOR_MQTT_H
 
-#include "mosquittopp.h"
+#include <mosquitto.h>
+#include <atomic>
 #include "FObserver.h"
 
 
@@ -31,25 +32,73 @@ namespace TempSensor{
         std::string topic;
     };
 
-    class Mqtt : public mosqpp::mosquittopp, public FObserver::Observer{
+
+    class Mqtt : public FObserver::Observer{
     public:
         explicit Mqtt(MqttSettings& settings);
-        void on_connect(int rc) override;
-        void on_message(const struct mosquitto_message *message) override;
-        void on_error() override;
-
-        void notify(const std::string& data) override;
+        ~Mqtt();
 
         /**
-         * send msg with qos 1 and retain
+         * connect mqtt, get all paramaters from MqttSettings
+         * @return
+         */
+        bool connect();
+
+         /**
+         * Set username and password for login, if username is null password is ignored
+         */
+        bool setUnamePwd(const std::string &username, const std::string &password);
+
+        /**
+         * called on accepted connection
+         */
+        void onConnected();
+
+        /**
+        * @param topic
+        * @param message
+        */
+        void onMessage(std::string topic, std::string message);
+
+        void subscribe(const std::string &topic, const int qos);
+
+        /**
+         * @brief called on error message
+         * @param errmsg
+         */
+        static void onError(const std::string &errmsg);
+
+        /**
          * @param topic
          * @param msg
          */
-        void publish(const std::string& topic, const std::string& msg);
+        void publish(const std::string& topic, const std::string& msg, int qos);
+
+        /**
+         * Blocking loop
+         */
+        void loop();
+
+        /**
+         * disconnect the client
+         */
+        void close();
+
+        /**
+         * Cleanup mosquitto library. This call should be called before program termination
+         */
+        static void cleanup_library();
+
+        void notify(const std::string& data) override;
+
     private:
         bool isConnected;
         std::string mPendingData;
         std::string mTopic;
+        MqttSettings mSettings;
+
+        struct mosquitto *mosq = nullptr;
+        std::atomic<bool> mRunning{};
     };
 }//namespace
 

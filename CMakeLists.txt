@@ -17,7 +17,7 @@ find_package (SQLite3 REQUIRED)
 set(SQLITE3_LIBRARY "-lsqlite3")
 include_directories(${SQLITE3_INCLUDE_DIRS})
 
-find_package(Mosquittopp)
+find_package(Mosquitto)
 include_directories(${MOSQUITTO_INCLUDE_DIRS})
 
 
@@ -43,7 +43,7 @@ set(lib_utils_SRC
 add_library(lib_utils ${lib_utils_SRC})
 
 add_executable(tempsensor main.cpp ${SOURCE_FILES})
-target_link_libraries(tempsensor lib_utils ${SQLITE3_LIBRARY} ${MOSQUITTOPP_LIBRARIES})
+target_link_libraries(tempsensor lib_utils ${SQLITE3_LIBRARY} ${MOSQUITTO_LIBRARIES})
 
 if(unittest)
     add_subdirectory(googletest)

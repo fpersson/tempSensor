@@ -15,62 +15,185 @@
 
 
 #include <iostream>
+#include <sstream>
 #include "IOhelper.h"
 #include "Mqtt.h"
 
 namespace TempSensor{
-    Mqtt::Mqtt(TempSensor::MqttSettings &settings) :
-                                    mosquittopp(settings.ID.c_str(), true),
-                                    isConnected(false),
-                                    mPendingData(""),
-                                    mTopic(settings.topic){
 
-        mosqpp::lib_init();
-        int keepAlive=60;
-        username_pw_set(settings.username.c_str(), settings.password.c_str());
-        int result = connect(settings.server.c_str(), settings.port, keepAlive);
-        loop_start();
-        std::cout << "connecting result=" << result << std::endl;
+    static void on_connect(struct mosquitto *mosq_obj, void *obj, int rc) {
+        std::cout << "on_connect called" << std::endl;
 
+        (void)mosq_obj;
+        Mqtt *mosq = (Mqtt*)obj;
+
+        if(rc == 0) {
+            mosq->onConnected();
+        }else{
+            std::stringstream ss ;
+            ss << "Connection failed (Error code " << rc << ")";
+            std::string msg = ss.str();
+            mosq->onError(msg.c_str());
+        };
     }
 
-    void Mqtt::on_connect(int rc) {
-        std::cout << "connected (" << rc << ")" << std::endl;
-        if(rc == 0){
-            subscribe(nullptr, mTopic.c_str());
-            isConnected = true;
-            notify(mPendingData); //make sure to send pending data asap we get connection
+    static void on_message(struct mosquitto *mosq_obj, void *obj, const struct mosquitto_message *message) {
+        (void)mosq_obj;
+        Mqtt *mosq = (Mqtt*)obj;
+#ifdef DEBUGMODE
+        std::cout << "on_message: " <<std::string((char*)message->topic) << " - " << std::string((char*)message->payload) << std::endl;
+#endif
+        mosq->onMessage(std::string((char*)message->topic) , std::string((char*)message->payload));
+    }
+
+    static int hpp_pw_callback(char *buf, int size, int rwflag, void *userdata) {
+        (void)buf;
+        (void)size;
+        (void)rwflag;
+        (void)userdata;
+        return -1;
+    }
+
+    static void log_callback(struct mosquitto *m, void *v, int i, const char *c){
+        std::cerr << "DEBUG: " << c << std::endl;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Mqtt::Mqtt(TempSensor::MqttSettings &settings) : isConnected(false), mPendingData(""), mTopic(settings.topic), mSettings(settings){
+        mosquitto_lib_init();
+        mosq = mosquitto_new(nullptr, true, this);
+
+        if(this->mosq == nullptr){
+            std::cerr << "Error creating mosquitto instance" << std::endl;
         }
-    }
 
-    void Mqtt::on_message(const struct mosquitto_message *message) {
-        std::cout << "got message " << (char*)message->payload << std::endl;
-    }
-
-    void Mqtt::on_error() {
-        std::cout << "A error..." << std::endl;
+        if(setUnamePwd(settings.username.c_str(), settings.password.c_str())){
+            mosquitto_connect_callback_set(this->mosq, &on_connect);
+            mosquitto_message_callback_set(this->mosq, &on_message);
+#ifdef DEBUGMODE
+            mosquitto_log_callback_set(mosq, &log_callback);
+#endif
+        }else{
+            std::cerr << "Username/password invalid - not connected" << std::endl;
+        }
     }
 
     void Mqtt::notify(const std::string &data) {
         if(isConnected){
-            std::cout << "Mqtt::notify: " << data << " sending..."<< std::endl;
-
+#ifdef DEBUGMODE
+            std::cout<< "Mqtt::notify: " << data << " sending..."<< std::endl;
+#endif
             std::string sendData = "{\"date\": \"";
             sendData.append(IO::getCurrentTime("%a %d %B - %R"));
             sendData.append("\", \"temp\" : \"");
             sendData.append(data).append("\"}");
 
-            publish(mTopic.c_str(), sendData);
+            publish(mTopic.c_str(), sendData, 2);
             mPendingData = "";
 
         }else {
+#ifdef DEBUGMODE
             std::cout << "Mqtt::notify: " << data << " waiting..."<< std::endl;
+#endif
             mPendingData = data;
         }
     }
 
-    void Mqtt::publish(const std::string& topic, const std::string& msg) {
+    void Mqtt::publish(const std::string& topic, const std::string& msg, int qos) {
         std::cout << "Mqtt::publish -m " << msg << " -t " << topic << std::endl;
-        int rc = mosqpp::mosquittopp::publish(nullptr, topic.c_str(), msg.length(), msg.c_str(), 1, true);
+
+        const char *payload = msg.c_str();
+        const int len = (int)msg.size();
+
+        int ret = mosquitto_publish(mosq, nullptr, topic.c_str(), len, (const void*)payload, qos, false);
+        if(ret != MOSQ_ERR_SUCCESS){
+            std::cerr << "Publish error" << std::endl;
+        }
+    }
+
+    void Mqtt::onConnected() {
+        std::cout << "Mqtt Connected..." << std::endl;
+#ifdef DEBUGMODE
+        subscribe("testing", 2);
+#endif
+
+        notify(mPendingData); //make sure to send pending data asap we get connection
+    }
+
+    void Mqtt::onMessage(std::string topic, std::string message) {
+
+    }
+
+    void Mqtt::onError(const std::string &errmsg) {
+        std::cerr << "Mqtt Error - " << errmsg << std::endl;
+    }
+
+    bool Mqtt::setUnamePwd(const std::string &username, const std::string &password) {
+        return !(mosquitto_username_pw_set(mosq, username.c_str(), password.c_str()) != MOSQ_ERR_SUCCESS);
+    }
+
+    void Mqtt::loop() {
+        if(mosq == nullptr){
+            std::cout << "Mqtt::loop - nullptr error" << std::endl;
+        }
+        int rc = mosquitto_loop_forever(mosq, -1, 1);
+        std::cout << "exit loop (" << rc << ")" << std::endl;
+
+        if(rc == MOSQ_ERR_SUCCESS){
+            std::cout << "Started ok" << std::endl;
+        }else if(rc == MOSQ_ERR_NO_CONN){
+            std::cout << "No connection" << std::endl;
+        }else if(rc == MOSQ_ERR_CONN_REFUSED){
+            std::cout << "Connection refused" << std::endl;
+        }else if(rc == MOSQ_ERR_PROTOCOL){
+            std::cout << "Protocol wrong" << std::endl;
+        }else if(rc == MOSQ_ERR_CONN_LOST){
+            std::cout << "Connection lost" << std::endl;
+        }else if(rc == MOSQ_ERR_NOMEM){
+            std::cout << "No memory" << std::endl;
+        }else if(rc == MOSQ_ERR_INVAL){
+            std::cout << "Inval error" << std::endl;
+        }else if(rc == MOSQ_ERR_ERRNO ) {
+            std::cout << "Errno" << std::endl;
+        }else if(rc == MOSQ_ERR_TLS){
+            std::cout << "TSL Error" << std::endl;
+        } else {
+            std::cout << "wtf?" << std::endl;
+        }
+    }
+
+
+    void Mqtt::close() {
+        mRunning = false;
+        mosquitto_disconnect(mosq);
+    }
+
+    void Mqtt::cleanup_library() {
+        mosquitto_lib_cleanup();
+    }
+
+    void Mqtt::subscribe(const std::string &topic, const int qos) {
+        int ret = mosquitto_subscribe(mosq, NULL, topic.c_str(), qos);
+        if(ret != MOSQ_ERR_SUCCESS){
+            std::cout << "Subscribe error" << std::endl;
+        }
+    }
+
+    Mqtt::~Mqtt() {
+        cleanup_library();
+        mosquitto_destroy(mosq);
+    }
+
+    bool Mqtt::connect() {
+        int ret = mosquitto_connect(mosq, mSettings.server.c_str(), mSettings.port, 30);
+        if(ret != MOSQ_ERR_SUCCESS){
+#ifdef DEBUGMODE
+            std::cerr << "Could not connect..." << std::endl;
+#endif
+        }else{
+            std::cerr << "Mqtt::connected..." << std::endl;
+            isConnected = true;
+        }
     }
 }//namespace

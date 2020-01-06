@@ -92,12 +92,21 @@ int main(int argc, char **argv){
     mqttSettings.password=iniParser.getValue("password").second;
     mqttSettings.topic=iniParser.getValue("topic").second;
 
-    TempSensor::Mqtt m(mqttSettings);
+    TempSensor::Mqtt mqtt(mqttSettings);
+
+    auto mqttThread = std::thread([&mqtt](){
+        if(mqtt.connect()){
+            mqtt.loop();
+        }else{
+            std::cerr << "Mqtt failed to connect..." << std::endl;
+        }
+    });
 
     core.register_observer(dbManager);
-    core.register_observer(m);
+    core.register_observer(mqtt);
 
     std::thread t1 = tt.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
+    mqttThread.join();
     t1.join();
 
     return 0;
