@@ -106,7 +106,7 @@ namespace TempSensor{
         const char *payload = msg.c_str();
         const int len = (int)msg.size();
 
-        int ret = mosquitto_publish(mosq, nullptr, topic.c_str(), len, (const void*)payload, qos, false);
+        int ret = mosquitto_publish(mosq, nullptr, topic.c_str(), len, (const void*)payload, qos, true);
         if(ret != MOSQ_ERR_SUCCESS){
             std::cerr << "Publish error" << std::endl;
         }
