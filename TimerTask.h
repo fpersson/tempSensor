@@ -26,13 +26,13 @@ namespace TempSensor {
     class TimerTask {
     public:
         explicit TimerTask(long minutes = 1);
-        void run(std::function<void()>);
-        std::thread thread_run(std::function<void()>);
+        void run(const std::function<void()>&);
+        std::thread thread_run(const std::function<void()>&);
         void interrupt();
     private:
         long mDelay;
         void sleep();
-        std::atomic<bool> mRunning;
+        std::atomic<bool> mRunning{};
     };
 }
 

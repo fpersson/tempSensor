@@ -26,7 +26,7 @@ namespace TempSensor{
 #endif
     }
 
-    void TimerTask::run(std::function<void()>callback) {
+    void TimerTask::run(const std::function<void()>&callback) {
         mRunning = true;
         while(mRunning){
             callback();
@@ -34,7 +34,7 @@ namespace TempSensor{
         }
     }
 
-    std::thread TimerTask::thread_run(std::function<void()> callback) {
+    std::thread TimerTask::thread_run(const std::function<void()>& callback) {
         mRunning = true;
         return std::thread( [=] {
             while(mRunning){

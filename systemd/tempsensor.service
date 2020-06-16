@@ -1,7 +1,8 @@
 [Unit]
-Description=firebase service to post outdoortemperature
+Description=Mqtt service to post/log temperature
 [Service]
 ExecStart=/home/pi/bin/start_sensor.sh
 Restart=on-faliure
 RestartSec=2s
 [Install]
+WantedBy=multi-user.target
