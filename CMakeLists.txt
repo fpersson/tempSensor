@@ -30,7 +30,8 @@ set(SOURCE_FILES
         DBManager.cpp
         DBManager.h
         Mqtt.cpp
-        Mqtt.h)
+        Mqtt.h
+)
 
 set(lib_utils_SRC
         IOhelper.cpp
@@ -38,6 +39,8 @@ set(lib_utils_SRC
         IniParser.cpp
         IniParser.h
         optional.h
+        History.h
+        History.cpp
         )
 
 add_library(lib_utils ${lib_utils_SRC})

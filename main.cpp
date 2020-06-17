@@ -76,7 +76,8 @@ int main(int argc, char **argv){
         std::cerr << "no db_file defined in " << ini_file << '\n';
     }
 
-    TempSensor::TimerTask tt(interval);
+    TempSensor::TimerTask readSensorTask(interval);
+    TempSensor::TimerTask postHistoryTask(interval); //@todo, set its own interval
 
     TempSensor::SensorCore core(sensor);
 
@@ -105,9 +106,15 @@ int main(int argc, char **argv){
     core.register_observer(dbManager);
     core.register_observer(mqtt);
 
-    std::thread t1 = tt.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
+    std::thread readSensorThread = readSensorTask.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
+
+    std::thread historyThread = postHistoryTask.thread_run([&mqtt, &dbManager](){
+
+    });
+
     mqttThread.join();
-    t1.join();
+    readSensorThread.join();
+    historyThread.join();
 
     return 0;
 }
