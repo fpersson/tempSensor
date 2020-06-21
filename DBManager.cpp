@@ -74,3 +74,33 @@ void DBManager::notify(const std::string &data) {
         std::cerr << "No valid sqlite database\n";
     }
 }
+
+bool DBManager::exec(const std::string &query, int (*callback)(void *, int, char **, char **)) {
+    int exit = 0;
+    char *errMsg;
+
+    exit = sqlite3_exec(DB, query.c_str(), callback, nullptr, &errMsg);
+
+    if (exit != SQLITE_OK) {
+        sqlite3_free(errMsg);
+        return false;
+    }
+
+    return true;
+}
+
+bool DBManager::getHistory(int(*callback)(void*, int, char **, char**)) {
+    if(DB != nullptr){
+        std::string sql ="select * from (select * from temperature order by ID desc limit 48) order by ID asc;";
+#ifdef DEBUGMODE
+        std::cout << sql << std::endl;
+#endif
+        if(!exec(sql, callback)){
+            std::cerr << "Could not execute: " << sql << '\n';
+            return false;
+        }
+    }else{
+        std::cerr << "No valid sqlite database\n";
+    }
+    return true;
+}

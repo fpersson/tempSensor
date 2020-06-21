@@ -3,9 +3,9 @@
 //
 
 #include "History.h"
+#include "HistoryData.h"
 
 namespace Serialize {
-
     std::string history2Json(const History &history) {
         std::string begin = "{\"data\":[";
         std::string end = "]}";
@@ -33,5 +33,23 @@ namespace Serialize {
 
         result.append(end);
         return result;
+    }
+
+    int historyQuery(void *data, int argc, char **argv, char **azColName){
+        int i;
+
+        for(i = 0; i<argc; i++){
+#ifdef DEBUGMODE
+            std::cout << "i=" << i << " " << azColName[i] << "=" << argv[i] << std::endl;
+#endif
+        }
+
+        HistoryPoint point;
+        point.ID=argv[0];
+        point.temp=argv[1];
+        point.timestamp=argv[2];
+        HistoryData::getInstance().append(point);
+
+        return 0;
     }
 }

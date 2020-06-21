@@ -30,10 +30,14 @@ public:
     void notify(const std::string& data) override;
     bool init(const std::string &dbfile);
 
+    bool getHistory(int(*callback)(void*, int, char **, char**));
+
 private:
     sqlite3* DB = nullptr;
     void createDatabase();
     bool exec(const std::string &query);
+
+    bool exec(const std::string &query, int(*callback)(void*, int, char **, char**));
 
 };
 

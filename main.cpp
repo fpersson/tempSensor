@@ -24,6 +24,8 @@
 
 #include "DBManager.h"
 #include "Mqtt.h"
+#include "History.h"
+#include "HistoryData.h"
 
 int main(int argc, char **argv){
 
@@ -42,6 +44,8 @@ int main(int argc, char **argv){
     std::string token;
     std::string db_file;
     long interval=1;
+
+    std::string history_topic = "N/A";
 
     utils::IniParser iniParser;
     iniParser.parseFile(ini_file);
@@ -76,6 +80,12 @@ int main(int argc, char **argv){
         std::cerr << "no db_file defined in " << ini_file << '\n';
     }
 
+    if(iniParser.getValue("history_topic").first){
+        history_topic = iniParser.getValue("history_topic").second;
+    }else{
+        std::cerr << "no history_topic defined in " << ini_file << '\n';
+    }
+
     TempSensor::TimerTask readSensorTask(interval);
     TempSensor::TimerTask postHistoryTask(interval); //@todo, set its own interval
 
@@ -108,13 +118,23 @@ int main(int argc, char **argv){
 
     std::thread readSensorThread = readSensorTask.thread_run(std::bind(&TempSensor::SensorCore::readSensor, &core));
 
-    std::thread historyThread = postHistoryTask.thread_run([&mqtt, &dbManager](){
+    if(history_topic != "N/A") {
+        std::thread historyThread = postHistoryTask.thread_run([&mqtt, &dbManager, &history_topic]() {
+            dbManager.getHistory(Serialize::historyQuery);
+#ifdef DEBUGMODE
+            std::cout << HistoryData::getInstance().getSerializeHistory() << std::endl;
+#endif
+            mqtt.publish(history_topic, HistoryData::getInstance().getSerializeHistory(), 2);
+            HistoryData::getInstance().clear();
+        });
 
-    });
+        historyThread.join();
+    }else{
+        std::cout << "History disabled" << std::endl;
+    }
 
     mqttThread.join();
     readSensorThread.join();
-    historyThread.join();
 
     return 0;
 }

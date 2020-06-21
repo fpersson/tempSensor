@@ -7,7 +7,7 @@
 
 #include <string>
 #include <vector>
-
+#include <iostream>
 namespace Serialize {
     const std::string timestamp = "\"TIMESTAMP\":\""; //json key
     const std::string id = "\"ID\":\""; //json key
@@ -25,6 +25,16 @@ namespace Serialize {
      * @return a serialized history
      */
     std::string history2Json(const History &history);
+
+    /**
+     * @brief callback for history query
+     * @param data
+     * @param argc
+     * @param argv
+     * @param azColName
+     * @return
+     */
+    int historyQuery(void *data, int argc, char **argv, char **azColName);
 
 } //namespace;
 

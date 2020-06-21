@@ -50,15 +50,6 @@ TEST(initfile, readfile){
     utils::InitResult sensor_id = iniParser.getValue("sensor");
     EXPECT_TRUE(sensor_id.first);
     EXPECT_EQ("28-0417a2f482ff", sensor_id.second);
-
-    utils::InitResult url = iniParser.getValue("url");
-    EXPECT_TRUE(url.first);
-    EXPECT_EQ("https://testing-c408e.firebaseio.com/sensors/testing/current.json", url.second);
-
-    utils::InitResult token = iniParser.getValue("token");
-    EXPECT_TRUE(token.first);
-    EXPECT_EQ("AIzaSyDBE1KqXaAvicpGklTBRP0ZvYoBJXG5PoI", token.second);
-
 }
 
 TEST(functions, trim){
