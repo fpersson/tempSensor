@@ -23,9 +23,10 @@
 #include "IniParser.h"
 
 #include "DBManager.h"
-#include "Mqtt.h"
+#include "mqtt/Mqtt.h"
 #include "History.h"
 #include "HistoryData.h"
+#include "MqttClient.h"
 
 int main(int argc, char **argv){
 
@@ -103,7 +104,7 @@ int main(int argc, char **argv){
     mqttSettings.password=iniParser.getValue("password").second;
     mqttSettings.topic=iniParser.getValue("topic").second;
 
-    TempSensor::Mqtt mqtt(mqttSettings);
+    TempSensor::MqttClient mqtt(mqttSettings);
 
     auto mqttThread = std::thread([&mqtt](){
         if(mqtt.connect()){

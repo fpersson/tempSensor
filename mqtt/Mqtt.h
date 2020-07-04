@@ -19,7 +19,7 @@
 
 #include <mosquitto.h>
 #include <atomic>
-#include "FObserver.h"
+#include "../FObserver.h"
 
 
 namespace TempSensor{
@@ -33,7 +33,7 @@ namespace TempSensor{
     };
 
 
-    class Mqtt : public FObserver::Observer{
+    class Mqtt{
     public:
         explicit Mqtt(MqttSettings& settings);
         ~Mqtt();
@@ -52,17 +52,18 @@ namespace TempSensor{
         /**
          * called on accepted connection
          */
-        void onConnected();
+        virtual void onConnected() = 0;
 
         /**
-        * @param topic
-        * @param message
+         * @param topic
+         * @param message
         */
-        void onMessage(std::string topic, std::string message);
+        virtual void onMessage(std::string topic, std::string message) = 0;
 
-        void subscribe(const std::string &topic, const int qos);
+        void subscribe(const std::string &topic, int qos);
 
         /**
+         * @todo make pure virtual
          * @brief called on error message
          * @param errmsg
          */
@@ -89,16 +90,14 @@ namespace TempSensor{
          */
         static void cleanup_library();
 
-        void notify(const std::string& data) override;
-
     private:
-        bool isConnected;
-        std::string mPendingData;
-        std::string mTopic;
         MqttSettings mSettings;
 
         struct mosquitto *mosq = nullptr;
         std::atomic<bool> mRunning{};
+    protected:
+        bool isConnected;
+        std::string mTopic;
     };
 }//namespace
 

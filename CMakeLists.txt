@@ -29,9 +29,10 @@ set(SOURCE_FILES
         FObserver.h
         DBManager.cpp
         DBManager.h
-        Mqtt.cpp
-        Mqtt.h
-)
+        mqtt/Mqtt.cpp
+        mqtt/Mqtt.h
+        MqttClient.cpp
+        MqttClient.h)
 
 set(lib_utils_SRC
         IOhelper.cpp

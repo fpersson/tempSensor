@@ -16,7 +16,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "IOhelper.h"
+#include "../IOhelper.h"
 #include "Mqtt.h"
 
 namespace TempSensor{
@@ -60,7 +60,7 @@ namespace TempSensor{
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Mqtt::Mqtt(TempSensor::MqttSettings &settings) : isConnected(false), mPendingData(""), mTopic(settings.topic), mSettings(settings){
+    Mqtt::Mqtt(TempSensor::MqttSettings &settings) : isConnected(false), mTopic(settings.topic), mSettings(settings){
         mosquitto_lib_init();
         mosq = mosquitto_new(nullptr, true, this);
 
@@ -79,27 +79,6 @@ namespace TempSensor{
         }
     }
 
-    void Mqtt::notify(const std::string &data) {
-        if(isConnected){
-#ifdef DEBUGMODE
-            std::cout<< "Mqtt::notify: " << data << " sending..."<< std::endl;
-#endif
-            std::string sendData = "{\"date\": \"";
-            sendData.append(IO::getCurrentTime("%a %d %B - %R"));
-            sendData.append("\", \"temp\" : \"");
-            sendData.append(data).append("\"}");
-
-            publish(mTopic.c_str(), sendData, 2);
-            mPendingData = "";
-
-        }else {
-#ifdef DEBUGMODE
-            std::cout << "Mqtt::notify: " << data << " waiting..."<< std::endl;
-#endif
-            mPendingData = data;
-        }
-    }
-
     void Mqtt::publish(const std::string& topic, const std::string& msg, int qos) {
         std::cout << "Mqtt::publish -m " << msg << " -t " << topic << std::endl;
 
@@ -110,15 +89,6 @@ namespace TempSensor{
         if(ret != MOSQ_ERR_SUCCESS){
             std::cerr << "Publish error" << std::endl;
         }
-    }
-
-    void Mqtt::onConnected() {
-        std::cout << "Mqtt Connected..." << std::endl;
-#ifdef DEBUGMODE
-        subscribe("testing", 2);
-#endif
-
-        notify(mPendingData); //make sure to send pending data asap we get connection
     }
 
     void Mqtt::onMessage(std::string topic, std::string message) {
