@@ -60,7 +60,7 @@ namespace TempSensor{
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Mqtt::Mqtt(TempSensor::MqttSettings &settings) : isConnected(false), mTopic(settings.topic), mSettings(settings){
+    Mqtt::Mqtt(TempSensor::MqttSettings &settings) : isConnected(false), mSettings(settings){
         mosquitto_lib_init();
         mosq = mosquitto_new(nullptr, true, this);
 

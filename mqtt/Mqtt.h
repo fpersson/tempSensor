@@ -63,7 +63,6 @@ namespace TempSensor{
         void subscribe(const std::string &topic, int qos);
 
         /**
-         * @todo make pure virtual
          * @brief called on error message
          * @param errmsg
          */
@@ -97,7 +96,7 @@ namespace TempSensor{
         std::atomic<bool> mRunning{};
     protected:
         bool isConnected;
-        std::string mTopic;
+        //std::string mTopic;
     };
 }//namespace
 
