@@ -21,33 +21,12 @@
 #include "../optional.h"
 #include "../History.h"
 
-TEST(inifile, stringsplit){
-    utils::IniParser iniParser;
-
-    iniParser.parseString("; this is a comments");
-    iniParser.parseString("# this is a comments");
-    iniParser.parseString("[section]");
-    iniParser.parseString("foo=bar");
-    iniParser.parseString("test=apa #inline comment");
-    iniParser.parseString("");
-    utils::InitResult result = iniParser.getValue("foo");
-    EXPECT_TRUE(result.first);
-    EXPECT_EQ("bar",  result.second);
-
-    utils::InitResult result_test = iniParser.getValue("test");
-    EXPECT_TRUE(result_test.first);
-    EXPECT_EQ("apa", result_test.second);
-
-    utils::InitResult resulterr = iniParser.getValue("bar");
-    EXPECT_FALSE(resulterr.first);
-}
-
 TEST(initfile, readfile){
     utils::IniParser iniParser;
 
     iniParser.parseFile("./testdata/settings.ini");
 
-    utils::InitResult sensor_id = iniParser.getValue("sensor");
+    IO::ReadResult sensor_id = iniParser.getValue("SensorSettings.sensor");
     EXPECT_TRUE(sensor_id.first);
     EXPECT_EQ("28-0417a2f482ff", sensor_id.second);
 }
@@ -88,8 +67,6 @@ TEST(jsom, generate_one){
     history.emplace_back(h1);
 
     EXPECT_EQ("{\"data\":[{\"TIMESTAMP\":\"2019-04-19 21:18:52\",\"ID\":\"916\",\"TEMP\":\"7.62\"}]}",Serialize::history2Json(history));
-
-    //std::cout << Serialize::history2Json(history) << std::endl;
 }
 
 TEST(jsom, generate_multiple){

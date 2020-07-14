@@ -29,7 +29,6 @@ namespace TempSensor{
         int port;
         std::string username;
         std::string password;
-        std::string topic;
     };
 
 

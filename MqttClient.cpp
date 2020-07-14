@@ -26,7 +26,7 @@ void TempSensor::MqttClient::notify(const std::string &data) {
         sendData.append("\", \"temp\" : \"");
         sendData.append(data).append("\"}");
 
-        publish(mTopic, sendData, 2);
+        publish(mNotifyTopic, sendData, 2);
         mPendingData = "";
     }else {
 #ifdef DEBUGMODE

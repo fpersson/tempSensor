@@ -19,9 +19,15 @@
 #include <iostream>
 #include <map>
 
-namespace utils {
+#include "IOhelper.h"
 
-    using InitResult = std::pair<bool, std::string>;
+namespace utils {
+    /**
+     * Setting.key Setting.value
+     */
+    using Setting = std::pair<std::string, std::string>;
+    using ParseResult = std::pair<bool, Setting>;
+
     /**
      * @class IniParser
      * @brief a simple parser for ini files, sections are not implemented (are ignored)
@@ -29,14 +35,18 @@ namespace utils {
     class IniParser {
     public:
         explicit IniParser(){;}
+        explicit IniParser(const std::string &file);
         /**
          * @param key
          * @return true and the value if the key exist, else false and a empty value
          */
-        InitResult getValue(const std::string &key);
-        void parseString(const std::string &data);
+        IO::ReadResult getValue(const std::string &key);
         void parseFile(const std::string &file);
+
     private:
+        IO::ReadResult isSection(const std::string &str);
+        ParseResult parseSettings(const std::string &data);
+
         std::map<std::string, std::string> m_keyValues;
     };
 } //utils

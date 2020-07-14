@@ -44,16 +44,24 @@ $ tempsensor <settings.ini>
 # edit to fit your needs.
 [SensorSettings]
 sensor=28-0417a2f482ff
-#interval given in minutes
-interval=1
 [SQLite]
-db_file=temperature.db
-[mqtt]
+db_file=./testdata/temperature.db
+[Mqtt]
+ID=foo1
 server=m24.cloudmqtt.com
 port=15786
-username=foo
-password=bar
-topic=lek
+username=test
+password=test
+
+[Topic1]
+topic=playground
+#interval given in minutes
+interval=1
+
+[Topic2]
+topic=playground_history
+#interval given in minutes
+interval=1
 ```
 
 ## Frontend

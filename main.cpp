@@ -51,40 +51,28 @@ int main(int argc, char **argv){
     utils::IniParser iniParser;
     iniParser.parseFile(ini_file);
 
-    if(iniParser.getValue("sensor").first){
-        sensor = iniParser.getValue("sensor").second;
+    if(iniParser.getValue("SensorSettings.sensor").first){
+        sensor = iniParser.getValue("SensorSettings.sensor").second;
     }else{
         std::cerr << "no sensor defined in " << ini_file << '\n';
     }
 
-    if(iniParser.getValue("url").first){
-        url = iniParser.getValue("url").second;
-    }else{
-        std::cerr << "no url defined in " << ini_file << '\n';
-    }
-
-    if(iniParser.getValue("token").first){
-        token = iniParser.getValue("token").second;
-    }else{
-        std::cerr << "no token defined in " << ini_file << '\n';
-    }
-
-    if(iniParser.getValue("interval").first){
-        interval = std::stol(iniParser.getValue("interval").second);
+    if(iniParser.getValue("Topic1.interval").first){
+        interval = std::stol(iniParser.getValue("Topic1.interval").second);
     }else{
         std::cerr << "no interval defined in " << ini_file << " using default 1 minute\n";
     }
 
-    if(iniParser.getValue("db_file").first){
-        db_file = iniParser.getValue("db_file").second;
+    if(iniParser.getValue("SQLite.db_file").first){
+        db_file = iniParser.getValue("SQLite.db_file").second;
     }else{
         std::cerr << "no db_file defined in " << ini_file << '\n';
     }
 
-    if(iniParser.getValue("history_topic").first){
-        history_topic = iniParser.getValue("history_topic").second;
+    if(iniParser.getValue("Topic2.topic").first){
+        history_topic = iniParser.getValue("Topic2-topic").second;
     }else{
-        std::cerr << "no history_topic defined in " << ini_file << '\n';
+        std::cerr << "no Topic2.topic defined in " << ini_file << '\n';
     }
 
     TempSensor::TimerTask readSensorTask(interval);
@@ -97,14 +85,17 @@ int main(int argc, char **argv){
 
     TempSensor::MqttSettings mqttSettings;
 
-    mqttSettings.ID=iniParser.getValue("ID").second;
-    mqttSettings.server=iniParser.getValue("server").second;
-    mqttSettings.port=std::stoi(iniParser.getValue("port").second);//15786;
-    mqttSettings.username=iniParser.getValue("username").second;
-    mqttSettings.password=iniParser.getValue("password").second;
-    mqttSettings.topic=iniParser.getValue("topic").second;
+    mqttSettings.ID=iniParser.getValue("Mqtt.ID").second;
+    mqttSettings.server=iniParser.getValue("Mqtt.server").second;
+    mqttSettings.port=std::stoi(iniParser.getValue("Mqtt.port").second);//15786;
+    mqttSettings.username=iniParser.getValue("Mqtt.username").second;
+    mqttSettings.password=iniParser.getValue("Mqtt.password").second;
 
-    TempSensor::MqttClient mqtt(mqttSettings);
+    auto topic = iniParser.getValue("Topic1.topic").second;
+
+    std::cout << "Topic:" << topic << std::endl;
+
+    TempSensor::MqttClient mqtt(mqttSettings, topic);
 
     auto mqttThread = std::thread([&mqtt](){
         if(mqtt.connect()){

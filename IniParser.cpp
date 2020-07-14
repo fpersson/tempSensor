@@ -19,8 +19,11 @@
 #include "IniParser.h"
 
 namespace utils {
+    IniParser::IniParser(const std::string &file) {
+        parseFile(file);
+    }
 
-    InitResult IniParser::getValue(const std::string &key) {
+    IO::ReadResult IniParser::getValue(const std::string &key) {
         std::map<std::string, std::string>::iterator it;
         it = m_keyValues.find(key);
 
@@ -32,10 +35,12 @@ namespace utils {
     }
 
 
-    void IniParser::parseString(const std::string &data) {
+    ParseResult IniParser::parseSettings(const std::string &data) {
+        bool success = false;
+        Setting setting;
         if(!data.empty()){
             if (data.at(0) == ';' || data.at(0) == '[' || data.at(0) == '#') {
-                ///@todo add support for sections if needed
+                //ignore comments
             } else {
                 size_t found_char;
                 found_char = data.find_first_of("=");
@@ -47,30 +52,59 @@ namespace utils {
                         auto key = IO::trim(data.substr(0, found_char));
                         auto value = IO::trim(data.substr(found_char + 1, len));
 
-                        m_keyValues.insert(std::pair<std::string, std::string>(key, value));
+                        setting = std::pair<std::string, std::string>(key, value);
+                        success = true;
                     }else {
 
                         auto key = IO::trim(data.substr(0, found_char));
                         auto value = IO::trim(data.substr(found_char + 1));
 
-                        m_keyValues.insert(std::pair<std::string, std::string>(key, value));
+                        setting = std::pair<std::string, std::string>(key, value);
+                        success = true;
                     }
                 }
             }
         }
+        return std::make_pair(success, setting);
     }
 
     void IniParser::parseFile(const std::string &file) {
         std::ifstream in(file);
         std::string line;
+        std::string section;
 
         if(in.is_open()){
             while(getline(in, line)){
-                parseString(line);
+                auto result = isSection(IO::trim(line));
+                if(result.first){
+                    section = result.second;
+                }else {
+                    auto setting_result = parseSettings(line);
+                    if(setting_result.first){
+                        auto key = section;
+                        key.append(setting_result.second.first);
+                        auto value = setting_result.second.second;
+#ifdef DEBUGMODE
+                        std::cout <<  key << "=" << value << std::endl;
+#endif
+                        m_keyValues.insert(std::make_pair(key, value));
+                    }
+                }
             }
         }else{
             std::cerr << " could not open: " << file << '\n';
         }
 
+    }
+
+    IO::ReadResult IniParser::isSection(const std::string &str) {
+        bool is_section = false;
+        std::string section;
+        if (str.at(0) == '[') {
+            is_section = true;
+            auto last = str.find_last_not_of(']');
+            section = str.substr(1, (last-1 +1)).append(".");
+        }
+        return std::make_pair(is_section, section);
     }
 } //utils
