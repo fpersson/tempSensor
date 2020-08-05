@@ -70,7 +70,7 @@ int main(int argc, char **argv){
     }
 
     if(iniParser.getValue("Topic2.topic").first){
-        history_topic = iniParser.getValue("Topic2-topic").second;
+        history_topic = iniParser.getValue("Topic2.topic").second;
     }else{
         std::cerr << "no Topic2.topic defined in " << ini_file << '\n';
     }
