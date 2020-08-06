@@ -42,7 +42,7 @@ set(lib_utils_SRC
         optional.h
         History.h
         History.cpp
-        HistoryData.h)
+        HistoryData.h keys.h)
 
 add_library(lib_utils ${lib_utils_SRC})
 
