@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2020, Fredrik Persson <fpersson.se@gmail.com>
+    Copyright (C) 2019, Fredrik Persson <fpersson.se@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software
     for any purpose with or without fee is hereby granted.
@@ -11,30 +11,30 @@
     LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
     OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
     OF THIS SOFTWARE.
-*/
+ */
 
 
-#ifndef TEMPSENSOR_MQTTCLIENT_H
-#define TEMPSENSOR_MQTTCLIENT_H
+#ifndef TEMPSENSOR_TIMERTASK_H
+#define TEMPSENSOR_TIMERTASK_H
 
-#include "mqtt/Mqtt.h"
-#include "FObserver.h"
+#include <chrono>
+#include <thread>
+#include <functional>
+#include <atomic>
 
 namespace TempSensor {
-    class MqttClient : public Mqtt, public FObserver::Observer {
+    class TimerTask {
     public:
-        MqttClient(MqttSettings &settings, const std::string &notify_topic) : Mqtt(settings), mPendingData(""), mNotifyTopic(notify_topic){;}
-
-        void onConnected() override;
-
-        void onMessage(std::string topic, std::string message) override;
-
-        void notify(const std::string& data) override;
+        explicit TimerTask(long minutes = 1);
+        void run(const std::function<void()>&);
+        std::thread thread_run(const std::function<void()>&);
+        void interrupt();
     private:
-        std::string mPendingData;
-        std::string mNotifyTopic;
+        long mDelay;
+        void sleep() const;
+        std::atomic<bool> mRunning{};
     };
 }
 
 
-#endif //TEMPSENSOR_MQTTCLIENT_H
+#endif //TEMPSENSOR_TIMERTASK_H

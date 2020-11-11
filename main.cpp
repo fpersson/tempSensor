@@ -17,17 +17,17 @@
 #include <iostream>
 #include <functional>
 
-#include "TimerTask.h"
-#include "SensorCore.h"
+#include "libutils/src/TimerTask.h"
+#include "libsensor/src/SensorCore.h"
 #include "FObserver.h"
 #include "IniParser.h"
 
-#include "DBManager.h"
-#include "mqtt/Mqtt.h"
+#include "libsensor/src/DBManager.h"
+#include "Mqtt.h"
 #include "History.h"
 #include "HistoryData.h"
-#include "MqttClient.h"
-#include "keys.h"
+#include "libsensor/src/MqttClient.h"
+#include "Keys.h"
 
 int main(int argc, char **argv){
 

@@ -44,7 +44,7 @@ namespace TempSensor{
         });
     }
 
-    void TimerTask::sleep() {
+    void TimerTask::sleep() const {
         std::this_thread::sleep_for(std::chrono::minutes(mDelay));
     }
 

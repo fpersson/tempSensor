@@ -16,7 +16,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "../IOhelper.h"
+#include "IOhelper.h"
 #include "Mqtt.h"
 
 namespace TempSensor{

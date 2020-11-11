@@ -20,34 +20,15 @@ include_directories(${SQLITE3_INCLUDE_DIRS})
 find_package(Mosquitto)
 include_directories(${MOSQUITTO_INCLUDE_DIRS})
 
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(SOURCE_FILES
-        TimerTask.cpp
-        TimerTask.h
-        SensorCore.cpp
-        SensorCore.h
-        FObserver.h
-        DBManager.cpp
-        DBManager.h
-        mqtt/Mqtt.cpp
-        mqtt/Mqtt.h
-        MqttClient.cpp
-        MqttClient.h)
-
-set(lib_utils_SRC
-        IOhelper.cpp
-        IOhelper.h
-        IniParser.cpp
-        IniParser.h
-        optional.h
-        History.h
-        History.cpp
-        HistoryData.h keys.h)
-
-add_library(lib_utils ${lib_utils_SRC})
+add_subdirectory(libutils)
+add_subdirectory(libmqtt)
+add_subdirectory(libsensor)
 
 add_executable(tempsensor main.cpp ${SOURCE_FILES})
-target_link_libraries(tempsensor lib_utils ${SQLITE3_LIBRARY} ${MOSQUITTO_LIBRARIES})
+target_link_libraries(tempsensor libutils libmqtt libsensor ${SQLITE3_LIBRARY} ${MOSQUITTO_LIBRARIES})
 
 if(unittest)
     add_subdirectory(googletest)
@@ -55,7 +36,7 @@ if(unittest)
     include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
     #Unittests
-    add_executable(runUnitTests unit_tests/test_main.cpp)
+    add_executable(runUnitTests libutils/tests/test_utils.cpp)
     target_link_libraries(runUnitTests gtest gtest_main)
-    target_link_libraries(runUnitTests lib_utils)
+    target_link_libraries(runUnitTests libutils)
 endif()

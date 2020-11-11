@@ -19,7 +19,7 @@
 
 #include <mosquitto.h>
 #include <atomic>
-#include "../FObserver.h"
+#include "FObserver.h"
 
 
 namespace TempSensor{
@@ -38,7 +38,7 @@ namespace TempSensor{
         ~Mqtt();
 
         /**
-         * connect mqtt, get all paramaters from MqttSettings
+         * connect libmqtt, get all paramaters from MqttSettings
          * @return
          */
         bool connect();
