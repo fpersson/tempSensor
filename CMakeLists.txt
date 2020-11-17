@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.7)
 project(tempsensor)
 
 #Option activate with -Dunittest=ON
-option(unittest "Build unittest." ON)
+option(unittest "Build unittest." OFF)
 
 #uncomment to as devel
 #add_definitions(-DDEVEL)
