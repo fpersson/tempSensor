@@ -17,13 +17,15 @@
 #ifndef TEMPSENSOR_MQTTCLIENT_H
 #define TEMPSENSOR_MQTTCLIENT_H
 
+#include <utility>
+
 #include "Mqtt.h"
 #include "FObserver.h"
 
 namespace TempSensor {
     class MqttClient : public Mqtt, public FObserver::Observer {
     public:
-        MqttClient(MqttSettings &settings, const std::string &notify_topic) : Mqtt(settings), mPendingData(""), mNotifyTopic(notify_topic){;}
+        MqttClient(MqttSettings &settings, std::string notify_topic) : Mqtt(settings), mPendingData(""), mNotifyTopic(std::move(notify_topic)){;}
 
         void onConnected() override;
 

@@ -25,6 +25,10 @@ namespace IO {
     using ReadResult = std::pair<bool, std::string>;
     using StringList = std::vector<std::string>;
 
+    /**
+     * @param file
+     * @return true and a string if we have valid data, and false and a empty string if we dont have anything
+     */
     ReadResult readFromFile(const std::string &file);
 
     void writeToFile(const std::string &file, const std::string &data);

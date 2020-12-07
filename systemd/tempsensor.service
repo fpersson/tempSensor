@@ -1,8 +1,8 @@
 [Unit]
 Description=Mqtt service to post/log temperature
 [Service]
-ExecStart=/home/pi/bin/start_sensor.sh
-Restart=on-faliure
-RestartSec=2s
+ExecStart=/home/pi/bin/tempsensor /home/pi/bin/settings.ini
+Restart=on-failure
+RestartSec=1s
 [Install]
 WantedBy=multi-user.target

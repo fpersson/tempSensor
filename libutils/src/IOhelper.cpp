@@ -30,10 +30,6 @@ namespace IO{
         stream.close();
     }
 
-    /**
-     * @param file
-     * @return true and a string if we have valid data, and false and a empty string if we dont have anything
-     */
     ReadResult readFromFile(const std::string &file){
         std::string data;
         std::string line;
