@@ -18,6 +18,7 @@ namespace Serialize {
         std::string ID;
         std::string temp;
     };
+
     using History = std::vector<HistoryPoint>;
 
     /**
@@ -27,12 +28,12 @@ namespace Serialize {
     std::string history2Json(const History &history);
 
     /**
-     * @brief callback for history query
+     * @brief callback for history query used by sqlite3
      * @param data
      * @param argc
      * @param argv
      * @param azColName
-     * @return
+     * @return always return 0
      */
     int historyQuery(void *data, int argc, char **argv, char **azColName);
 

@@ -14,7 +14,7 @@ public:
         return instance;
     }
 
-    void append(Serialize::HistoryPoint point){
+    void append(const Serialize::HistoryPoint& point){
         mHistory.push_back(point);
     }
 

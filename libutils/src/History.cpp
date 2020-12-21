@@ -36,13 +36,12 @@ namespace Serialize {
     }
 
     int historyQuery(void *data, int argc, char **argv, char **azColName){
-        int i;
-
-        for(i = 0; i<argc; i++){
 #ifdef DEBUGMODE
+        int i;
+        for(i = 0; i<argc; i++){
             std::cout << "i=" << i << " " << azColName[i] << "=" << argv[i] << std::endl;
-#endif
         }
+#endif
 
         HistoryPoint point;
         point.ID=argv[0];
