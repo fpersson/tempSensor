@@ -105,6 +105,14 @@ $ sudo systemctl enable tempsensor.service
 $ sudo systemctl start tempsensor.service
 ```
 
+## Setup Sphinx for documentation
+```bash
+$ sudo pip install sphinx
+$ sudo pip install sphinx_rtd_theme
+$ sudo pip install breathe
+```
+
+
 ## Licens (Zero Clause BSD)
 ```
     Copyright (C) 2019, Fredrik Persson <fpersson.se@gmail.com>

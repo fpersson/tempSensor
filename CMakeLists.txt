@@ -26,6 +26,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_subdirectory(libutils)
 add_subdirectory(libmqtt)
 add_subdirectory(libsensor)
+add_subdirectory(doc)
 
 add_executable(tempsensor main.cpp ${SOURCE_FILES})
 target_link_libraries(tempsensor libutils libmqtt libsensor ${SQLITE3_LIBRARY} ${MOSQUITTO_LIBRARIES})
@@ -60,16 +61,3 @@ if(unittest)
     target_link_libraries(runUnitTests gtest gtest_main)
     target_link_libraries(runUnitTests libutils)
 endif()
-
-#[[ --------------------------------------------------------
-if(unittest)
-    add_subdirectory(googletest)
-    enable_testing()
-    include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-
-    #Unittests
-    add_executable(runUnitTests libutils/tests/test_utils.cpp)
-    target_link_libraries(runUnitTests gtest gtest_main)
-    target_link_libraries(runUnitTests libutils)
-endif()
-]]
