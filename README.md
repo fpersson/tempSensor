@@ -14,28 +14,45 @@ $ tempsensor <settings.ini>
 ```
 
 ### Build.
-
-* mkdir build
-* cd build
-* cmake ..
-* cd ..
-* make -C build
-* sudo ./build/tempsensor
+```bash
+$ mkdir build
+$ cd build
+$ cmake ..
+$ cd ..
+$ make -C build
+$ sudo ./build/tempsensor
+```
 
 ### Build gtests.
-
-* mkdir build
-* cd build
-* cmake .. -Dunittest=ON
-* cd ..
-* make -C build
-* ./build/runUnitTests
+```bash
+$ mkdir build
+$ cd build
+$ cmake .. -Dunittest=ON
+$ cd ..
+$ make -C build
+$ ./build/runUnitTests
+```
+### Build doc.
+This step require doxygen and sphinx
+```bash
+$ mkdir build
+$ cd build
+$ cmake .. -Ddoc=ON
+$ cd ..
+$ make doc -C build
+```
 
 ### Dependecy.
 
+#### Ubuntu/Raspberry OS (Lite)
 * libsqlite3-dev
 * libmosquitto-dev
 * libmosquittopp-dev
+
+#### OpenSuse TW
+```bash
+$ sudo zypper install sqlite3-devel libmosquitto1 libmosquittopp1 mosquitto-devel
+```
 
 ### settings.ini
 

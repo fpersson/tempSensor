@@ -1,14 +1,8 @@
 cmake_minimum_required(VERSION 3.7)
 project(tempsensor)
 
-#Option activate with -Dunittest=ON
 option(unittest "Build unittest." OFF)
-
-#uncomment to as devel
-#add_definitions(-DDEVEL)
-
-#uncomment to in debug
-#add_definitions(-DDEBUGMODE)
+option(doc "Build unittest." OFF)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++14")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -26,7 +20,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_subdirectory(libutils)
 add_subdirectory(libmqtt)
 add_subdirectory(libsensor)
-add_subdirectory(doc)
+
+if(doc)
+    add_subdirectory(doc)
+endif()
 
 add_executable(tempsensor main.cpp ${SOURCE_FILES})
 target_link_libraries(tempsensor libutils libmqtt libsensor ${SQLITE3_LIBRARY} ${MOSQUITTO_LIBRARIES})
