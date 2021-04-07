@@ -43,9 +43,9 @@ namespace utils {
                 //ignore comments
             } else {
                 size_t found_char;
-                found_char = data.find_first_of("=");
+                found_char = data.find_first_of('=');
                 if (found_char != std::string::npos) {
-                    auto inline_comment = data.find_first_of("#");
+                    auto inline_comment = data.find_first_of('#');
                     if(inline_comment != std::string::npos){
                         auto len = inline_comment-(found_char+1);
 

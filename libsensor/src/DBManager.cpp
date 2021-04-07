@@ -31,7 +31,7 @@ bool DBManager::init(const std::string &dbfile) {
 }
 
 bool DBManager::exec(const std::string &query) {
-    int exit = 0;
+    int exit;
     char *errMsg;
 
     exit = sqlite3_exec(DB, query.c_str(), nullptr, nullptr, &errMsg);
@@ -76,7 +76,7 @@ void DBManager::notify(const std::string &data) {
 }
 
 bool DBManager::exec(const std::string &query, int (*callback)(void *, int, char **, char **)) {
-    int exit = 0;
+    int exit;
     char *errMsg;
 
     exit = sqlite3_exec(DB, query.c_str(), callback, nullptr, &errMsg);

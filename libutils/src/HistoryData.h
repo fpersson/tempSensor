@@ -31,7 +31,7 @@ public:
     }
 
 private:
-    HistoryData(){;}
+    HistoryData()= default;
     Serialize::History mHistory;
 };
 

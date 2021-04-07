@@ -15,13 +15,12 @@
 
 
 #include <iostream>
-#include <sstream>
 #include <iomanip>
 #include "IOhelper.h"
 #include "SensorCore.h"
 
 namespace TempSensor {
-    SensorCore::SensorCore(std::string sensorID) : mSensorID(std::move(sensorID)), file("") {
+    SensorCore::SensorCore(std::string sensorID) : mSensorID(std::move(sensorID)){
         file.append(SYSFS_PATH).append(mSensorID).append(SLAVE);
 #ifdef DEBUGMODE
         std::cout << "INIT: " << file << std::endl;

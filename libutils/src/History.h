@@ -9,9 +9,9 @@
 #include <vector>
 #include <iostream>
 namespace Serialize {
-    const std::string timestamp = "\"TIMESTAMP\":\""; //json key
-    const std::string id = "\"ID\":\""; //json key
-    const std::string temp = "\"TEMP\":\""; //json key
+    const std::string timestamp = R"("TIMESTAMP":")"; //json key
+    const std::string id = R"("ID":")"; //json key
+    const std::string temp = R"("TEMP":")"; //json key
 
     struct HistoryPoint {
         std::string timestamp;

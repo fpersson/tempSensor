@@ -25,7 +25,7 @@
 namespace TempSensor {
     class MqttClient : public Mqtt, public FObserver::Observer {
     public:
-        MqttClient(MqttSettings &settings, std::string notify_topic) : Mqtt(settings), mPendingData(""), mNotifyTopic(std::move(notify_topic)){;}
+        MqttClient(MqttSettings &settings, std::string notify_topic) : Mqtt(settings), mNotifyTopic(std::move(notify_topic)){}
 
         void onConnected() override;
 

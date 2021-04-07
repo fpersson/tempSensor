@@ -34,7 +34,7 @@ namespace utils {
      */
     class IniParser {
     public:
-        explicit IniParser(){;}
+        explicit IniParser()= default;
         explicit IniParser(const std::string &file);
         /**
          * @param key
@@ -44,8 +44,8 @@ namespace utils {
         void parseFile(const std::string &file);
 
     private:
-        IO::ReadResult isSection(const std::string &str);
-        ParseResult parseSettings(const std::string &data);
+        static IO::ReadResult isSection(const std::string &str);
+        static ParseResult parseSettings(const std::string &data);
 
         std::map<std::string, std::string> m_keyValues;
     };

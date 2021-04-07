@@ -21,9 +21,9 @@ void TempSensor::MqttClient::notify(const std::string &data) {
 #ifdef DEBUGMODE
         std::cout<< "Mqtt::notify: " << data << " sending..."<< std::endl;
 #endif
-        std::string sendData = "{\"date\": \"";
+        std::string sendData = R"({"date": ")";
         sendData.append(IO::getCurrentTime("%a %d %B - %R"));
-        sendData.append("\", \"temp\" : \"");
+        sendData.append(R"(", "temp" : ")");
         sendData.append(data).append("\"}");
 
         publish(mNotifyTopic, sendData, 2);

@@ -25,7 +25,7 @@
 
 class DBManager : public FObserver::Observer {
 public:
-    DBManager(){;}
+    DBManager()= default;
     ~DBManager();
     void notify(const std::string& data) override;
     bool init(const std::string &dbfile);
