@@ -58,3 +58,7 @@ if(unittest)
     target_link_libraries(runUnitTests gtest gtest_main)
     target_link_libraries(runUnitTests libutils)
 endif()
+
+install(TARGETS tempsensor DESTINATION /usr/local/bin/)
+install(FILES config/settings.ini DESTINATION /etc/tempsensor/)
+install(FILES systemd/tempsensor.service DESTINATION /etc/systemd/system/)

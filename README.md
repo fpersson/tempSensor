@@ -23,6 +23,14 @@ $ make -C build
 $ sudo ./build/tempsensor
 ```
 
+### Install
+```bash
+$ sudo make install -C build
+```
+This will install
+* tempsensor at /usr/local/bin/tempsensor
+* settings.ini at /etc/tempsensor/settings.ini
+
 ### Build gtests.
 ```bash
 $ mkdir build
