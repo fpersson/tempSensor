@@ -46,6 +46,7 @@ namespace TempSensor{
         mosq->onMessage(std::string((char*)message->topic) , std::string((char*)message->payload));
     }
 
+    [[maybe_unused]]
     static int hpp_pw_callback(char *buf, int size, int rwflag, void *userdata) {
         (void)buf;
         (void)size;
@@ -54,13 +55,14 @@ namespace TempSensor{
         return -1;
     }
 
+    [[maybe_unused]]
     static void log_callback(struct mosquitto *m, void *v, int i, const char *c){
         std::cerr << "DEBUG: " << c << std::endl;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Mqtt::Mqtt(TempSensor::MqttSettings &settings) : isConnected(false), mSettings(settings){
+    Mqtt::Mqtt(TempSensor::MqttSettings &settings) : mSettings(settings), isConnected(false){
         mosquitto_lib_init();
         mosq = mosquitto_new(nullptr, true, this);
 
@@ -156,14 +158,18 @@ namespace TempSensor{
     }
 
     bool Mqtt::connect() {
+        bool connection_state = false;
         int ret = mosquitto_connect(mosq, mSettings.server.c_str(), mSettings.port, 30);
         if(ret != MOSQ_ERR_SUCCESS){
 #ifdef DEBUGMODE
             std::cerr << "Could not connect..." << std::endl;
 #endif
+            connection_state = true;
         }else{
             std::cerr << "Mqtt::connected..." << std::endl;
             isConnected = true;
         }
+
+        return connection_state;
     }
 }//namespace

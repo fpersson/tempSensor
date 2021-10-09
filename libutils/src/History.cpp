@@ -13,7 +13,7 @@ namespace Serialize {
         std::string result;
         result.append(begin);
 
-        for(int i = 0; i <history.size(); ++i){
+        for(long unsigned int i = 0; i <history.size(); ++i){
             std::string tmp;
             tmp.append("{");
             tmp.append(timestamp);

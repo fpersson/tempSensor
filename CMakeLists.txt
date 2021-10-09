@@ -4,7 +4,7 @@ project(tempsensor)
 option(unittest "Build unittest." OFF)
 option(doc "Build unittest." OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -std=c++17")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package (SQLite3 REQUIRED)
@@ -29,6 +29,8 @@ add_executable(tempsensor main.cpp ${SOURCE_FILES})
 target_link_libraries(tempsensor libutils libmqtt libsensor ${SQLITE3_LIBRARY} ${MOSQUITTO_LIBRARIES})
 
 if(unittest)
+    #Fuck GMock.....
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=maybe-uninitialized")
     configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
     execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
             RESULT_VARIABLE result
