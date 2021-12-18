@@ -32,7 +32,6 @@ void TempSensor::MqttClient::notify(const std::string &data) {
 
 void TempSensor::MqttClient::onConnected() {
     std::cout << "Mqtt Connected..." << std::endl;
-
     notify(mPendingData); //make sure to send pending data asap we get connection
 }
 

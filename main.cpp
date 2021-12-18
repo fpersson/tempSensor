@@ -114,9 +114,6 @@ int main(int argc, char **argv){
     if(history_topic != "N/A") {
         std::thread historyThread = postHistoryTask.thread_run([&mqtt, &dbManager, &history_topic]() {
             dbManager.getHistory(Serialize::historyQuery);
-#ifdef DEBUGMODE
-            std::cout << HistoryData::getInstance().getSerializeHistory() << std::endl;
-#endif
             mqtt.publish(history_topic, HistoryData::getInstance().getSerializeHistory(), 2);
             HistoryData::getInstance().clear();
         });

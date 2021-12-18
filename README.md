@@ -130,7 +130,6 @@ To autostart the sensor at boot (or restart if it crash) use systemd.
 ```bash
 $ mkdir ~/bin
 $ cp <src_path>/build/tempsensor ~/bin/
-$ cp <src_path>/systemd/start_sensor.sh ~/bin/
 $ sudo cp <src_path>/systemd/tempsensor.service /etc/systemd/system/tempsensor.service
 $ sudo systemctl enable tempsensor.service
 $ sudo systemctl start tempsensor.service

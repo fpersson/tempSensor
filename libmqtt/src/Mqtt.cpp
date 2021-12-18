@@ -157,10 +157,12 @@ namespace TempSensor{
     bool Mqtt::connect() {
         bool connection_state = false;
         int ret = mosquitto_connect(mosq, mSettings.server.c_str(), mSettings.port, 30);
+        std::cerr << "Connecting to: " << mSettings.server.c_str() << "@" << mSettings.port << std::endl;
         if(ret != MOSQ_ERR_SUCCESS){
-            connection_state = true;
+            std::cerr << "Mqtt::connect: connection error: " << ret << std::endl;
         }else{
-            std::cerr << "Mqtt::connected..." << std::endl;
+            std::cerr << "Mqtt::connect connected." << std::endl;
+            connection_state = true;
             isConnected = true;
         }
 
