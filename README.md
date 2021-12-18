@@ -75,6 +75,7 @@ $ sudo zypper install tempSensor
 # edit to fit your needs.
 [SensorSettings]
 sensor=28-0417a2f482ff
+base_path=./testdata #optional
 [SQLite]
 db_file=./testdata/temperature.db
 [Mqtt]

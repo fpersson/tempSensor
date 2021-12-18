@@ -20,8 +20,8 @@
 #include "SensorCore.h"
 
 namespace TempSensor {
-    SensorCore::SensorCore(std::string sensorID) : mSensorID(std::move(sensorID)){
-        file.append(SYSFS_PATH).append(mSensorID).append(SLAVE);
+    SensorCore::SensorCore(const std::string& sensorPath, const std::string& sensorID){
+        file.append(sensorPath).append(sensorID).append(SLAVE);
     }
 
     void SensorCore::readSensor() {

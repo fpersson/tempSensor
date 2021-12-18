@@ -79,7 +79,15 @@ int main(int argc, char **argv){
     TempSensor::TimerTask readSensorTask(interval);
     TempSensor::TimerTask postHistoryTask(interval); //@todo, set its own interval
 
-    TempSensor::SensorCore core(sensor);
+    std::string sensor_path;
+    auto [isPathConfigured, path] = iniParser.getValue(core::key::SENSOR_BASEPATH);
+
+    if(isPathConfigured){
+        sensor_path = path;
+    }else{
+        sensor_path = TempSensor::SYSFS_PATH;
+    }
+    TempSensor::SensorCore core(sensor_path, sensor);
 
     DBManager dbManager;
     dbManager.init(db_file);

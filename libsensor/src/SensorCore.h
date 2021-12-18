@@ -22,21 +22,15 @@
 
 namespace TempSensor {
 
-#ifdef DEVEL
-    const std::string SYSFS_PATH = "./testdata/";
-#else
     const std::string SYSFS_PATH = "/sys/bus/w1/devices/";
-#endif
-
     const std::string SLAVE = "/w1_slave";
 
     class SensorCore : public  FObserver::Observable{
     public:
-        explicit SensorCore(std::string sensorID);
+        explicit SensorCore(const std::string& sensorPath, const std::string& sensorID);
         void readSensor();
 
     private:
-        std::string mSensorID;
         std::string file;
     };
 } //namespace

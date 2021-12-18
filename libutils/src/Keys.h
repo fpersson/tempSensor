@@ -21,6 +21,7 @@
 namespace core{
     namespace key {
         const std::string SENSOR = "SensorSettings.sensor";
+        const std::string SENSOR_BASEPATH = "SensorSettings.base_path";
         const std::string SQLITE_DB = "SQLite.db_file";
         const std::string MQTT_ID = "Mqtt.ID";
         const std::string MQTT_SERVER = "Mqtt.server";
