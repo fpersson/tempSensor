@@ -62,6 +62,12 @@ $ make doc -C build
 $ sudo zypper install sqlite3-devel libmosquitto1 libmosquittopp1 mosquitto-devel
 ```
 
+### Install prebuild package from OBS on rpi with OpenSUSE
+```bash
+$ sudo zypper addrepo https://download.opensuse.org/repositories/home:/fpersson/openSUSE_Factory_ARM/home:fpersson.repo
+$ sudo zypper install tempSensor
+```
+
 ### settings.ini
 
 ```
