@@ -23,17 +23,17 @@ namespace TempSensor{
     TimerTask::TimerTask(long minutes) :mDelay(minutes) {;}
 
     void TimerTask::run(const std::function<void()>&callback) {
-        mRunning = true;
-        while(mRunning){
+        mRunning.store(true);
+        while(mRunning.load()){
             callback();
             this->sleep();
         }
     }
 
     std::thread TimerTask::thread_run(const std::function<void()>& callback) {
-        mRunning = true;
+        mRunning.store(true);
         return std::thread( [=] {
-            while(mRunning){
+            while(mRunning.load()){
                 callback();
                 this->sleep();
             }
@@ -45,7 +45,7 @@ namespace TempSensor{
     }
 
     void TimerTask::interrupt() {
-        mRunning = false;
+        mRunning.store(false);
     }
 
 }

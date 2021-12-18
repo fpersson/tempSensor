@@ -92,7 +92,7 @@ namespace TempSensor{
         MqttSettings mSettings;
 
         struct mosquitto *mosq = nullptr;
-        std::atomic<bool> mRunning{};
+        [[maybe_unused]] std::atomic<bool> mRunning{};
     protected:
         bool isConnected;
     };
