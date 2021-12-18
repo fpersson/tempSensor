@@ -19,15 +19,70 @@
 #include "IOhelper.h"
 #include "IniParser.h"
 #include "History.h"
+#include "Keys.h"
 
-TEST(initfile, readfile){
+TEST(inifile, readfile){
     utils::IniParser iniParser;
 
-    iniParser.parseFile("./testdata/settings.ini");
+    iniParser.parseFile("../testdata/settings.ini");
 
-    IO::ReadResult sensor_id = iniParser.getValue("SensorSettings.sensor");
+    IO::ReadResult sensor_id = iniParser.getValue(core::key::SENSOR);
     EXPECT_TRUE(sensor_id.first);
     EXPECT_EQ("28-0417a2f482ff", sensor_id.second);
+}
+
+TEST(inifile, read_full){
+    utils::IniParser iniParser;
+
+    iniParser.parseFile("../testdata/settings.ini");
+
+    IO::ReadResult sensor_id = iniParser.getValue(core::key::SENSOR);
+    EXPECT_TRUE(sensor_id.first);
+    EXPECT_EQ("28-0417a2f482ff", sensor_id.second);
+
+    IO::ReadResult sensor_path = iniParser.getValue(core::key::SENSOR_BASEPATH);
+    EXPECT_FALSE(sensor_path.first);
+
+    IO::ReadResult db_file = iniParser.getValue(core::key::SQLITE_DB);
+    EXPECT_TRUE(db_file.first);
+    EXPECT_EQ("./testdata/temperature.db", db_file.second);
+
+    IO::ReadResult mqtt_id = iniParser.getValue(core::key::MQTT_ID);
+    EXPECT_TRUE(mqtt_id.first);
+    EXPECT_EQ("foo1", mqtt_id.second);
+
+    IO::ReadResult mqtt_server = iniParser.getValue(core::key::MQTT_SERVER);
+    EXPECT_TRUE(mqtt_server.first);
+    EXPECT_EQ("m24.cloudmqtt.com", mqtt_server.second);
+
+    IO::ReadResult mqtt_port = iniParser.getValue(core::key::MQTT_PORT);
+    EXPECT_TRUE(mqtt_port.first);
+    EXPECT_EQ("15786", mqtt_port.second);
+
+    IO::ReadResult mqtt_uname = iniParser.getValue(core::key::MQTT_USERNAME);
+    EXPECT_TRUE(mqtt_uname.first);
+    EXPECT_EQ("test", mqtt_uname.second);
+
+    IO::ReadResult mqtt_pass = iniParser.getValue(core::key::MQTT_PASSWORD);
+    EXPECT_TRUE(mqtt_pass.first);
+    EXPECT_EQ("test", mqtt_pass.second);
+
+    IO::ReadResult mqtt_topic_1 = iniParser.getValue(core::key::TOPIC1_TOPIC);
+    EXPECT_TRUE(mqtt_topic_1.first);
+    EXPECT_EQ("playground", mqtt_topic_1.second);
+
+    IO::ReadResult mqtt_interval_1 = iniParser.getValue(core::key::TOPIC1_INTERVAL);
+    EXPECT_TRUE(mqtt_interval_1.first);
+    EXPECT_EQ("1", mqtt_interval_1.second);
+
+    IO::ReadResult mqtt_topic_2 = iniParser.getValue(core::key::TOPIC2_TOPIC);
+    EXPECT_TRUE(mqtt_topic_2.first);
+    EXPECT_EQ("playground_history", mqtt_topic_2.second);
+
+    IO::ReadResult mqtt_interval_2 = iniParser.getValue(core::key::TOPIC2_INTERVAL);
+    EXPECT_TRUE(mqtt_interval_2.first);
+    EXPECT_EQ("1", mqtt_interval_2.second);
+
 }
 
 TEST(functions, trim){
@@ -42,7 +97,7 @@ TEST(functions, trim){
     EXPECT_EQ(last, IO::trim(last));
 }
 
-TEST(jsom, generate_one){
+TEST(json, generate_one){
     Serialize::History history;
     Serialize::HistoryPoint h1;
 
@@ -54,7 +109,7 @@ TEST(jsom, generate_one){
     EXPECT_EQ("{\"data\":[{\"TIMESTAMP\":\"2019-04-19 21:18:52\",\"ID\":\"916\",\"TEMP\":\"7.62\"}]}",Serialize::history2Json(history));
 }
 
-TEST(jsom, generate_multiple){
+TEST(json, generate_multiple){
     Serialize::History history;
     Serialize::HistoryPoint h1;
 
