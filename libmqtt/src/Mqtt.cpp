@@ -143,7 +143,7 @@ namespace TempSensor{
     }
 
     void Mqtt::subscribe(const std::string &topic, const int qos) {
-        int ret = mosquitto_subscribe(mosq, NULL, topic.c_str(), qos);
+        int ret = mosquitto_subscribe(mosq, nullptr, topic.c_str(), qos);
         if(ret != MOSQ_ERR_SUCCESS){
             std::cout << "Subscribe error" << std::endl;
         }
