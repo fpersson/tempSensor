@@ -22,16 +22,9 @@
 namespace TempSensor {
     SensorCore::SensorCore(std::string sensorID) : mSensorID(std::move(sensorID)){
         file.append(SYSFS_PATH).append(mSensorID).append(SLAVE);
-#ifdef DEBUGMODE
-        std::cout << "INIT: " << file << std::endl;
-#endif
-
     }
 
     void SensorCore::readSensor() {
-#ifdef DEBUGMODE
-        std::cout << "Reading " << file << std::endl;
-#endif
         auto fileRead = IO::readFromFile(file);
         if(fileRead.first) {
             IO::StringList sl = IO::split(fileRead.second, '\n');
@@ -40,9 +33,6 @@ namespace TempSensor {
             std::stringstream ss;
             ss << std::fixed << std::setprecision(2);
             ss << std::stof(IO::split(sl1[9], '=')[1]) / 1000;
-#ifdef DEBUGMODE
-            std::cout << "FOUND: " <<  ss.str() << std::endl;
-#endif
             onEvent(ss.str());
         }else{
             std::cerr << "Could not read sensor: " << file << '\n';

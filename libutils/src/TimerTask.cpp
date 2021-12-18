@@ -20,11 +20,7 @@
 
 namespace TempSensor{
 
-    TimerTask::TimerTask(long minutes) :mDelay(minutes) {
-#ifdef DEBUGMODE
-        std::cout << "Delay: " << mDelay << std::endl;
-#endif
-    }
+    TimerTask::TimerTask(long minutes) :mDelay(minutes) {;}
 
     void TimerTask::run(const std::function<void()>&callback) {
         mRunning = true;

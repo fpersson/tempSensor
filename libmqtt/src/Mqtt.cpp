@@ -40,9 +40,6 @@ namespace TempSensor{
     static void on_message(struct mosquitto *mosq_obj, void *obj, const struct mosquitto_message *message) {
         (void)mosq_obj;
         Mqtt *mosq = (Mqtt*)obj;
-#ifdef DEBUGMODE
-        std::cout << "on_message: " <<std::string((char*)message->topic) << " - " << std::string((char*)message->payload) << std::endl;
-#endif
         mosq->onMessage(std::string((char*)message->topic) , std::string((char*)message->payload));
     }
 
@@ -161,9 +158,6 @@ namespace TempSensor{
         bool connection_state = false;
         int ret = mosquitto_connect(mosq, mSettings.server.c_str(), mSettings.port, 30);
         if(ret != MOSQ_ERR_SUCCESS){
-#ifdef DEBUGMODE
-            std::cerr << "Could not connect..." << std::endl;
-#endif
             connection_state = true;
         }else{
             std::cerr << "Mqtt::connected..." << std::endl;

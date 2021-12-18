@@ -95,7 +95,6 @@ namespace TempSensor{
         std::atomic<bool> mRunning{};
     protected:
         bool isConnected;
-        //std::string mTopic;
     };
 }//namespace
 

@@ -64,9 +64,7 @@ void DBManager::notify(const std::string &data) {
     if(DB != nullptr){
         std::string sql ="INSERT INTO TEMPERATURE (TEMP, TIMESTAMP) VALUES(";
         sql.append(data).append(", CURRENT_TIMESTAMP);");
-#ifdef DEBUGMODE
-        std::cout << sql << std::endl;
-#endif
+
         if(!exec(sql)){
             std::cerr << "Could not execute: " << sql << '\n';
         }
@@ -92,9 +90,7 @@ bool DBManager::exec(const std::string &query, int (*callback)(void *, int, char
 bool DBManager::getHistory(int(*callback)(void*, int, char **, char**)) {
     if(DB != nullptr){
         std::string sql ="select * from (select * from temperature order by ID desc limit 48) order by ID asc;";
-#ifdef DEBUGMODE
-        std::cout << sql << std::endl;
-#endif
+
         if(!exec(sql, callback)){
             std::cerr << "Could not execute: " << sql << '\n';
             return false;

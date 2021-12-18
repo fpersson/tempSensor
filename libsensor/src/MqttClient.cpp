@@ -18,9 +18,6 @@
 
 void TempSensor::MqttClient::notify(const std::string &data) {
     if(isConnected){
-#ifdef DEBUGMODE
-        std::cout<< "Mqtt::notify: " << data << " sending..."<< std::endl;
-#endif
         std::string sendData = R"({"date": ")";
         sendData.append(IO::getCurrentTime("%a %d %B - %R"));
         sendData.append(R"(", "temp" : ")");
@@ -29,18 +26,12 @@ void TempSensor::MqttClient::notify(const std::string &data) {
         publish(mNotifyTopic, sendData, 2);
         mPendingData = "";
     }else {
-#ifdef DEBUGMODE
-        std::cout << "Mqtt::notify: " << data << " waiting..."<< std::endl;
-#endif
         mPendingData = data;
     }
 }
 
 void TempSensor::MqttClient::onConnected() {
     std::cout << "Mqtt Connected..." << std::endl;
-#ifdef DEBUGMODE
-    subscribe("testing", 2);
-#endif
 
     notify(mPendingData); //make sure to send pending data asap we get connection
 }

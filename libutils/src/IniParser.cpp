@@ -84,9 +84,7 @@ namespace utils {
                         auto key = section;
                         key.append(setting_result.second.first);
                         auto value = setting_result.second.second;
-#ifdef DEBUGMODE
-                        std::cout <<  key << "=" << value << std::endl;
-#endif
+
                         m_keyValues.insert(std::make_pair(key, value));
                     }
                 }
